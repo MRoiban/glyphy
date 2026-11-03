@@ -14,12 +14,14 @@ uv venv && uv pip install -e '.[test]'
 .venv/bin/glyphy trace -p examples/codicon-style && .venv/bin/glyphy sheet -p examples/codicon-style
 ```
 
-The default settings are the pipeline that made Typewriter's glyphs, and the
-example pins them: `test_defaults_reproduce_the_example` retraces drafts and
-expects the committed glyphs pixel for pixel. A new idea goes in behind a
-setting that is off by default; change a default only when the example's sheet
-(`examples/codicon-style/out/sheet.png`) is visibly better and the numbers
-agree, then regenerate and commit the example with the change.
+The example pins the default (vector) pipeline: `test_defaults_reproduce_the_example`
+retraces its picks and expects the committed glyphs pixel for pixel. Judge any
+tracing change at the draft's full resolution (`glyphy inspect`, and the
+profile table in the README), never only at 16 px: small renders hide the
+defects that matter in a vector. A new idea goes in behind a setting that is
+off by default; change a default only when the inspect images are visibly
+better and the numbers agree, then regenerate and commit the example (sheet,
+glyphs, exports, `out/inspect/`) with the change.
 
 ## Code map
 
@@ -31,6 +33,9 @@ agree, then regenerate and commit the example with the change.
 | `src/glyphy/style.py` | Reference measurement → `[style]` rules (respects `locked`), baseline and reference sheet |
 | `src/glyphy/brief.py` | The generation brief and the custom-template context |
 | `src/glyphy/trace.py` | Ink mask → fit → stroke correction → potrace → snap → offset search → check |
+| `src/glyphy/vector.py` | The vector pipeline's geometry: faithful contours, vectorize (corners, lines, Schneider curves, regularization), offset, hint (IUP), SVG output |
+| `src/glyphy/vtrace.py` | `trace.method = "vector"`: draft → faithful → clean → stroke → box → pixels, with `vector_match` and the draft transform in the report |
+| `src/glyphy/inspect.py` | `glyphy inspect`: full-resolution evidence images |
 | `src/glyphy/outline.py` | `stroke_shape = "mitre"`: outline offsetting with shapely, exact one-step fit |
 | `src/glyphy/fidelity.py` | Centreline drift from the draft, stroke spread |
 | `src/glyphy/sheet.py` | Contact sheet |
@@ -47,9 +52,9 @@ agree, then regenerate and commit the example with the change.
   document it in the README's configuration table.
 - New CLI behaviour must also be reachable from Python (public functions).
 - `glyphy measure` must not overwrite keys listed in `style.locked`.
-- Profiles (`config.PROFILES`) are plain bundles of settings. Judge a tracing change
-  by the profile comparison in the README: rerun both profiles on the example and
-  update the table.
+- Profiles (`config.PROFILES`) are plain bundles of settings.
+- The vector pipeline never edits pixels after the faithful trace: stroke, fit and
+  alignment operate on lines and curves. Keep it that way.
 - Keep the skills in `skills/` in step with the CLI: a renamed flag or key
   must be renamed there too.
 - Comments explain why, not what.
