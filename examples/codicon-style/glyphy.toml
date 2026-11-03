@@ -1,0 +1,117 @@
+# Glyphy project. `glyphy measure` rewrites the measured [style] values from the
+# reference icons, except keys listed in style.locked. Everything is editable;
+# any [style] or [trace] key can be overridden per glyph in [glyphs.<name>].
+# Units are grid units unless noted.
+[style]
+grid = 16
+stroke = 1.0
+stroke_tolerance = 0.12
+letter_stroke = [
+    0.95,
+    1.4,
+]
+live = 14.0
+letter_height = 11.91
+pad_min = 0.75
+centring_max = 2.0
+crisp_reference = 0.6
+locked = []
+
+[trace]
+work_scale = 64
+threshold = 128
+speck = 0.0005
+fit = true
+correct = true
+rounds = 5
+stroke_epsilon = 0.04
+snap = 0.3
+offsets = 4
+centring_weight = 0.15
+turdsize = 16
+alphamax = 0.9
+opticurve = true
+opttolerance = 0.2
+decimals = 2
+
+[paths]
+reference = "reference"
+generated = "generated"
+traced = "traced"
+picked = "glyphs"
+out = "out"
+
+[brief]
+variants = 2
+image_size = 1024
+notes = ""
+template = ""
+
+[glyphs.heading]
+concept = "a geometric sans-serif capital \"H\""
+kind = "letter"
+replaces = "symbol-keyword"
+stroke_target = 1.0
+
+[glyphs.math-inline]
+concept = "an italic lowercase \"x\" with a small superscript \"2\""
+kind = "letter"
+replaces = "symbol-operator"
+
+[glyphs.math-display]
+concept = "a capital sigma between a line above and a line below"
+kind = "letter"
+replaces = "symbol-numeric"
+
+[glyphs.comment-toggle]
+concept = "two forward slashes followed by a short horizontal line"
+kind = "letter"
+replaces = "comment"
+
+[glyphs.follow-cursor]
+concept = "a text I-beam cursor inside four corner brackets"
+kind = "icon"
+replaces = "link"
+
+[glyphs.section]
+concept = "the section sign §"
+kind = "letter"
+replaces = "symbol-namespace"
+
+[glyphs.theme-light]
+concept = "a sun: a circle with 8 short rays"
+kind = "icon"
+replaces = "lightbulb"
+
+[glyphs.theme-dark]
+concept = "a crescent moon"
+kind = "icon"
+replaces = "color-mode"
+
+[glyphs.dark-pages]
+concept = "a page outline with a folded corner whose lower-right half is solid"
+kind = "icon"
+replaces = "color-mode"
+
+[glyphs.main-file]
+concept = "a page outline with a folded corner and a small solid star inside"
+kind = "icon"
+replaces = "target"
+
+[glyphs.typst-file]
+concept = "a page outline with a folded corner and a lowercase \"t\" inside"
+kind = "icon"
+replaces = "file-code"
+
+[picks]
+comment-toggle = "comment-toggle-1"
+dark-pages = "dark-pages-1"
+follow-cursor = "follow-cursor-1"
+heading = "heading-1"
+main-file = "main-file-1"
+math-display = "math-display-1"
+math-inline = "math-inline-1"
+section = "section-1"
+theme-dark = "theme-dark-1"
+theme-light = "theme-light-1"
+typst-file = "typst-file-1"

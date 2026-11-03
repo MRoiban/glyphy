@@ -1,0 +1,7 @@
+The SVG files in reference/ are from Codicons (https://github.com/microsoft/vscode-codicons),
+© Microsoft Corporation, licensed under the Creative Commons Attribution 4.0
+International licence (https://creativecommons.org/licenses/by/4.0/). They are
+unmodified and included only as the style reference for this example.
+
+Everything else in this folder (drafts, traced and picked glyphs, exports,
+reports) was produced with Glyphy and is covered by the repository's MIT licence.

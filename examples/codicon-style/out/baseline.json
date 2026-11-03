@@ -1,0 +1,417 @@
+{
+ "icons": 30,
+ "grid": 16,
+ "stroke": {
+  "median": 1.0,
+  "p10": 1.0,
+  "p90": 1.017
+ },
+ "box_side": {
+  "median": 14.0,
+  "p10": 12.0,
+  "p90": 14.775
+ },
+ "min_pad": {
+  "median": 1.0,
+  "p10": 0.225,
+  "p90": 2.0
+ },
+ "coverage": {
+  "median": 0.186,
+  "p10": 0.119,
+  "p90": 0.284
+ },
+ "centring": {
+  "median": 0.0,
+  "p10": 0.0,
+  "p90": 2.0
+ },
+ "crispness": {
+  "median": 0.605,
+  "p10": 0.317,
+  "p90": 0.952
+ },
+ "letterforms": {
+  "count": 3,
+  "stroke": {
+   "median": 1.202,
+   "p10": 1.04,
+   "p90": 1.395
+  }
+ },
+ "locked": [],
+ "derived_style": {
+  "stroke": 1.0,
+  "live": 14.0,
+  "pad_min": 0.75,
+  "letter_height": 11.91,
+  "letter_stroke": [
+   0.95,
+   1.4
+  ],
+  "crisp_reference": 0.6,
+  "centring_max": 2.0
+ },
+ "icons_measured": {
+  "bell": {
+   "stroke": 1.0,
+   "width": 11.969,
+   "height": 14.0,
+   "pad_left": 2.0,
+   "pad_right": 2.031,
+   "pad_top": 1.0,
+   "pad_bottom": 1.0,
+   "coverage": 0.166,
+   "components": 1,
+   "holes": 2
+  },
+  "bold": {
+   "stroke": 1.202,
+   "width": 7.0,
+   "height": 10.0,
+   "pad_left": 5.0,
+   "pad_right": 4.0,
+   "pad_top": 3.0,
+   "pad_bottom": 3.0,
+   "coverage": 0.147,
+   "components": 1,
+   "holes": 2
+  },
+  "cloud-upload": {
+   "stroke": 1.0,
+   "width": 14.0,
+   "height": 10.969,
+   "pad_left": 1.0,
+   "pad_right": 1.0,
+   "pad_top": 3.0,
+   "pad_bottom": 2.031,
+   "coverage": 0.171,
+   "components": 2,
+   "holes": 0
+  },
+  "code": {
+   "stroke": 1.017,
+   "width": 13.719,
+   "height": 10.438,
+   "pad_left": 1.0,
+   "pad_right": 1.281,
+   "pad_top": 3.0,
+   "pad_bottom": 2.562,
+   "coverage": 0.11,
+   "components": 3,
+   "holes": 0
+  },
+  "collapse-all": {
+   "stroke": 1.0,
+   "width": 12.0,
+   "height": 12.0,
+   "pad_left": 2.0,
+   "pad_right": 2.0,
+   "pad_top": 2.0,
+   "pad_bottom": 2.0,
+   "coverage": 0.213,
+   "components": 2,
+   "holes": 2
+  },
+  "color-mode": {
+   "stroke": 1.008,
+   "width": 14.0,
+   "height": 14.0,
+   "pad_left": 1.0,
+   "pad_right": 1.0,
+   "pad_top": 1.0,
+   "pad_bottom": 1.0,
+   "coverage": 0.38,
+   "components": 1,
+   "holes": 1
+  },
+  "comment": {
+   "stroke": 1.0,
+   "width": 14.0,
+   "height": 12.844,
+   "pad_left": 1.0,
+   "pad_right": 1.0,
+   "pad_top": 2.0,
+   "pad_bottom": 1.156,
+   "coverage": 0.184,
+   "components": 1,
+   "holes": 1
+  },
+  "eye": {
+   "stroke": 1.0,
+   "width": 12.938,
+   "height": 7.688,
+   "pad_left": 1.531,
+   "pad_right": 1.531,
+   "pad_top": 3.656,
+   "pad_bottom": 4.656,
+   "coverage": 0.12,
+   "components": 2,
+   "holes": 1
+  },
+  "file-code": {
+   "stroke": 1.0,
+   "width": 12.0,
+   "height": 14.0,
+   "pad_left": 2.0,
+   "pad_right": 2.0,
+   "pad_top": 1.0,
+   "pad_bottom": 1.0,
+   "coverage": 0.248,
+   "components": 3,
+   "holes": 2
+  },
+  "file-pdf": {
+   "stroke": 1.0,
+   "width": 12.0,
+   "height": 14.0,
+   "pad_left": 2.0,
+   "pad_right": 2.0,
+   "pad_top": 1.0,
+   "pad_bottom": 1.0,
+   "coverage": 0.283,
+   "components": 5,
+   "holes": 4
+  },
+  "file": {
+   "stroke": 1.0,
+   "width": 12.0,
+   "height": 14.0,
+   "pad_left": 2.0,
+   "pad_right": 2.0,
+   "pad_top": 1.0,
+   "pad_bottom": 1.0,
+   "coverage": 0.205,
+   "components": 1,
+   "holes": 2
+  },
+  "folder": {
+   "stroke": 1.0,
+   "width": 14.0,
+   "height": 12.0,
+   "pad_left": 1.0,
+   "pad_right": 1.0,
+   "pad_top": 2.0,
+   "pad_bottom": 2.0,
+   "coverage": 0.231,
+   "components": 1,
+   "holes": 2
+  },
+  "gear": {
+   "stroke": 0.978,
+   "width": 14.0,
+   "height": 14.0,
+   "pad_left": 1.0,
+   "pad_right": 1.0,
+   "pad_top": 1.0,
+   "pad_bottom": 1.0,
+   "coverage": 0.267,
+   "components": 2,
+   "holes": 2
+  },
+  "italic": {
+   "stroke": 1.443,
+   "width": 7.938,
+   "height": 11.906,
+   "pad_left": 4.0,
+   "pad_right": 4.062,
+   "pad_top": 2.0,
+   "pad_bottom": 2.094,
+   "coverage": 0.085,
+   "components": 1,
+   "holes": 0
+  },
+  "library": {
+   "stroke": 1.0,
+   "width": 14.75,
+   "height": 12.0,
+   "pad_left": 1.0,
+   "pad_right": 0.25,
+   "pad_top": 2.0,
+   "pad_bottom": 2.0,
+   "coverage": 0.299,
+   "components": 3,
+   "holes": 3
+  },
+  "lightbulb": {
+   "stroke": 1.0,
+   "width": 9.031,
+   "height": 13.0,
+   "pad_left": 4.0,
+   "pad_right": 2.969,
+   "pad_top": 1.0,
+   "pad_bottom": 2.0,
+   "coverage": 0.296,
+   "components": 1,
+   "holes": 1
+  },
+  "link": {
+   "stroke": 1.0,
+   "width": 14.0,
+   "height": 10.0,
+   "pad_left": 1.0,
+   "pad_right": 1.0,
+   "pad_top": 3.0,
+   "pad_bottom": 3.0,
+   "coverage": 0.17,
+   "components": 2,
+   "holes": 0
+  },
+  "list-ordered": {
+   "stroke": 1.0,
+   "width": 13.0,
+   "height": 11.0,
+   "pad_left": 2.0,
+   "pad_right": 1.0,
+   "pad_top": 2.0,
+   "pad_bottom": 3.0,
+   "coverage": 0.159,
+   "components": 6,
+   "holes": 0
+  },
+  "list-unordered": {
+   "stroke": 1.0,
+   "width": 14.0,
+   "height": 10.0,
+   "pad_left": 1.0,
+   "pad_right": 1.0,
+   "pad_top": 3.0,
+   "pad_bottom": 3.0,
+   "coverage": 0.188,
+   "components": 8,
+   "holes": 0
+  },
+  "new-file": {
+   "stroke": 1.0,
+   "width": 14.0,
+   "height": 15.0,
+   "pad_left": 2.0,
+   "pad_right": 0.0,
+   "pad_top": 1.0,
+   "pad_bottom": 0.0,
+   "coverage": 0.21,
+   "components": 2,
+   "holes": 2
+  },
+  "new-folder": {
+   "stroke": 1.0,
+   "width": 15.0,
+   "height": 15.0,
+   "pad_left": 1.0,
+   "pad_right": 0.0,
+   "pad_top": 1.0,
+   "pad_bottom": 0.0,
+   "coverage": 0.232,
+   "components": 2,
+   "holes": 2
+  },
+  "search": {
+   "stroke": 1.0,
+   "width": 14.969,
+   "height": 15.906,
+   "pad_left": 0.688,
+   "pad_right": 0.344,
+   "pad_top": 0.0,
+   "pad_bottom": 0.094,
+   "coverage": 0.155,
+   "components": 1,
+   "holes": 1
+  },
+  "symbol-keyword": {
+   "stroke": 1.0,
+   "width": 14.0,
+   "height": 12.0,
+   "pad_left": 1.0,
+   "pad_right": 1.0,
+   "pad_top": 2.0,
+   "pad_bottom": 2.0,
+   "coverage": 0.211,
+   "components": 7,
+   "holes": 1
+  },
+  "symbol-namespace": {
+   "stroke": 0.952,
+   "width": 12.0,
+   "height": 12.0,
+   "pad_left": 2.0,
+   "pad_right": 2.0,
+   "pad_top": 2.0,
+   "pad_bottom": 2.0,
+   "coverage": 0.11,
+   "components": 2,
+   "holes": 0
+  },
+  "symbol-numeric": {
+   "stroke": 1.0,
+   "width": 14.0,
+   "height": 14.0,
+   "pad_left": 1.0,
+   "pad_right": 1.0,
+   "pad_top": 1.0,
+   "pad_bottom": 1.0,
+   "coverage": 0.203,
+   "components": 1,
+   "holes": 1
+  },
+  "symbol-operator": {
+   "stroke": 1.0,
+   "width": 14.0,
+   "height": 14.0,
+   "pad_left": 1.0,
+   "pad_right": 1.0,
+   "pad_top": 1.0,
+   "pad_bottom": 1.0,
+   "coverage": 0.168,
+   "components": 6,
+   "holes": 2
+  },
+  "target": {
+   "stroke": 1.0,
+   "width": 14.0,
+   "height": 14.0,
+   "pad_left": 1.0,
+   "pad_right": 1.0,
+   "pad_top": 1.0,
+   "pad_bottom": 1.0,
+   "coverage": 0.258,
+   "components": 3,
+   "holes": 2
+  },
+  "wand": {
+   "stroke": 1.017,
+   "width": 14.0,
+   "height": 13.5,
+   "pad_left": 1.0,
+   "pad_right": 1.0,
+   "pad_top": 1.0,
+   "pad_bottom": 1.5,
+   "coverage": 0.169,
+   "components": 4,
+   "holes": 2
+  },
+  "zoom-in": {
+   "stroke": 1.01,
+   "width": 14.0,
+   "height": 14.0,
+   "pad_left": 1.0,
+   "pad_right": 1.0,
+   "pad_top": 1.0,
+   "pad_bottom": 1.0,
+   "coverage": 0.184,
+   "components": 2,
+   "holes": 1
+  },
+  "zoom-out": {
+   "stroke": 1.017,
+   "width": 14.0,
+   "height": 14.0,
+   "pad_left": 1.0,
+   "pad_right": 1.0,
+   "pad_top": 1.0,
+   "pad_bottom": 1.0,
+   "coverage": 0.168,
+   "components": 2,
+   "holes": 1
+  }
+ }
+}
