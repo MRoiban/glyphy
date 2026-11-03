@@ -1,96 +1,111 @@
 {
  "comment-toggle-1": {
   "glyph": "comment-toggle",
-  "raw_stroke": 1.127,
+  "raw_stroke": 1.132,
   "kind": "letter",
-  "stroke": 1.174,
+  "stroke": 1.202,
   "stroke_target": 1.2,
   "stroke_ok": true,
   "box": [
    12.0,
-   8.0
+   7.44
+  ],
+  "box_ok": true,
+  "min_pad": 2.0,
+  "pad_ok": true,
+  "centring": 0.5,
+  "centring_ok": true,
+  "roughness": 0.0,
+  "ok": true,
+  "crisp": 0.43,
+  "crisp_2x": 0.57,
+  "vector_match": 1.0,
+  "vector_worst": 0.017,
+  "hint_match": 1.0,
+  "offset": [
+   0.0,
+   -0.25
+  ],
+  "draft_transform": [
+   0.016361555866289554,
+   -2.1738221562374096,
+   -2.5063055682019244
+  ],
+  "stroke_offset": 0.0373,
+  "segments": 12,
+  "bytes": 294
+ },
+ "comment-toggle-2": {
+  "glyph": "comment-toggle",
+  "raw_stroke": 0.783,
+  "kind": "letter",
+  "stroke": 1.188,
+  "stroke_target": 1.2,
+  "stroke_ok": true,
+  "box": [
+   12.0,
+   6.88
   ],
   "box_ok": true,
   "min_pad": 2.0,
   "pad_ok": true,
   "centring": 0.0,
   "centring_ok": true,
-  "roughness": 0.158,
+  "roughness": 0.0,
   "ok": true,
-  "crisp": 0.33,
-  "crisp_2x": 0.59,
-  "drift": 0.225,
-  "drift_mean": 0.139,
-  "stroke_spread": 0.04,
-  "snap": 0.3,
-  "snap_mode": "corners",
+  "crisp": 0.29,
+  "crisp_2x": 0.58,
+  "vector_match": 1.0,
+  "vector_worst": 0.021,
+  "hint_match": 1.0,
   "offset": [
    0.0,
    0.0
   ],
-  "bytes": 3207
- },
- "comment-toggle-2": {
-  "glyph": "comment-toggle",
-  "raw_stroke": 0.769,
-  "kind": "letter",
-  "stroke": 1.183,
-  "stroke_target": 1.2,
-  "stroke_ok": true,
-  "box": [
-   11.72,
-   6.94
+  "draft_transform": [
+   0.013843669714500038,
+   -0.5765265350394688,
+   -0.6760134927671277
   ],
-  "box_ok": true,
-  "min_pad": 2.0,
-  "pad_ok": true,
-  "centring": 0.28,
-  "centring_ok": true,
-  "roughness": 0.283,
-  "ok": true,
-  "crisp": 0.32,
-  "crisp_2x": 0.57,
-  "drift": 0.156,
-  "drift_mean": 0.08,
-  "stroke_spread": 0.055,
-  "snap": 0.3,
-  "snap_mode": "corners",
-  "offset": [
-   0.25,
-   0.0
-  ],
-  "bytes": 3598
+  "stroke_offset": 0.2204,
+  "segments": 12,
+  "bytes": 293
  },
  "dark-pages-1": {
   "glyph": "dark-pages",
-  "raw_stroke": 1.0,
+  "raw_stroke": 0.969,
   "kind": "icon",
-  "stroke": 0.938,
+  "stroke": 1.062,
   "stroke_target": 1.0,
   "stroke_ok": true,
   "box": [
-   11.62,
+   11.75,
    14.0
   ],
   "box_ok": true,
   "min_pad": 1.0,
   "pad_ok": true,
-  "centring": 0.44,
+  "centring": 0.5,
   "centring_ok": true,
-  "roughness": 0.051,
+  "roughness": 0.021,
   "ok": true,
-  "crisp": 0.72,
-  "crisp_2x": 0.88,
-  "drift": 0.044,
-  "drift_mean": 0.008,
-  "stroke_spread": 0.562,
-  "snap": 0.3,
-  "snap_mode": "corners",
+  "crisp": 0.65,
+  "crisp_2x": 0.84,
+  "vector_match": 1.0,
+  "vector_worst": 0.016,
+  "hint_match": 1.0,
   "offset": [
    -0.25,
    0.0
   ],
-  "bytes": 1207
+  "draft_transform": [
+   0.015980580874268877,
+   -2.2735289117276496,
+   -2.321621939340799
+  ],
+  "stroke_offset": 0.0168,
+  "segments": 17,
+  "bytes": 335
  },
  "dark-pages-2": {
   "glyph": "dark-pages",
@@ -108,20 +123,25 @@
   "pad_ok": true,
   "centring": 0.0,
   "centring_ok": true,
-  "roughness": 0.12,
+  "roughness": 0.022,
   "ok": true,
-  "crisp": 0.57,
-  "crisp_2x": 0.91,
-  "drift": 0.25,
-  "drift_mean": 0.066,
-  "stroke_spread": 0.562,
-  "snap": 0.3,
-  "snap_mode": "corners",
+  "crisp": 0.58,
+  "crisp_2x": 0.94,
+  "vector_match": 1.0,
+  "vector_worst": 0.014,
+  "hint_match": 1.0,
   "offset": [
    0.0,
-   -0.25
+   0.0
   ],
-  "bytes": 909
+  "draft_transform": [
+   0.01398747450033303,
+   -0.7726256757502145,
+   -0.7629093856015664
+  ],
+  "stroke_offset": 0.1482,
+  "segments": 14,
+  "bytes": 315
  },
  "follow-cursor-1": {
   "glyph": "follow-cursor",
@@ -139,20 +159,25 @@
   "pad_ok": true,
   "centring": 0.0,
   "centring_ok": true,
-  "roughness": 0.187,
+  "roughness": 0.114,
   "ok": true,
-  "crisp": 0.68,
-  "crisp_2x": 0.78,
-  "drift": 0.688,
-  "drift_mean": 0.241,
-  "stroke_spread": 0.188,
-  "snap": 0.3,
-  "snap_mode": "corners",
+  "crisp": 0.47,
+  "crisp_2x": 0.74,
+  "vector_match": 1.0,
+  "vector_worst": 0.017,
+  "hint_match": 1.0,
   "offset": [
-   0.25,
+   0.0,
    0.0
   ],
-  "bytes": 1058
+  "draft_transform": [
+   0.017506512141435896,
+   -2.9803634904138505,
+   -2.9724525941045616
+  ],
+  "stroke_offset": 0.0,
+  "segments": 36,
+  "bytes": 616
  },
  "follow-cursor-2": {
   "glyph": "follow-cursor",
@@ -170,57 +195,67 @@
   "pad_ok": true,
   "centring": 0.0,
   "centring_ok": true,
-  "roughness": 0.191,
+  "roughness": 0.122,
   "ok": true,
-  "crisp": 0.73,
-  "crisp_2x": 0.83,
-  "drift": 0.469,
-  "drift_mean": 0.156,
-  "stroke_spread": 0.0,
-  "snap": 0.3,
-  "snap_mode": "corners",
+  "crisp": 0.62,
+  "crisp_2x": 0.91,
+  "vector_match": 1.0,
+  "vector_worst": 0.014,
+  "hint_match": 1.0,
   "offset": [
-   0.25,
-   -0.25
+   0.0,
+   0.0
   ],
-  "bytes": 1276
+  "draft_transform": [
+   0.013640360130829927,
+   -0.5552608603560204,
+   -0.5517583516831156
+  ],
+  "stroke_offset": 0.0501,
+  "segments": 36,
+  "bytes": 591
  },
  "heading-1": {
   "glyph": "heading",
   "raw_stroke": 1.781,
   "kind": "letter",
-  "stroke": 1.0,
+  "stroke": 1.188,
   "stroke_target": 1.2,
   "stroke_ok": true,
   "box": [
-   10.0,
+   10.38,
    12.0
   ],
   "box_ok": true,
   "min_pad": 2.0,
   "pad_ok": true,
-  "centring": 0.0,
+  "centring": 0.5,
   "centring_ok": true,
-  "roughness": 0.062,
+  "roughness": 0.06,
   "ok": true,
-  "crisp": 0.6,
-  "crisp_2x": 0.97,
-  "drift": 0.062,
-  "drift_mean": 0.019,
-  "stroke_spread": 0.062,
-  "snap": 0.3,
-  "snap_mode": "corners",
+  "crisp": 0.39,
+  "crisp_2x": 0.75,
+  "vector_match": 1.0,
+  "vector_worst": 0.013,
+  "hint_match": 1.0,
   "offset": [
-   0.0,
+   0.25,
    0.0
   ],
-  "bytes": 399
+  "draft_transform": [
+   0.013493676293602605,
+   -0.21298572951846922,
+   -0.4603752347152197
+  ],
+  "stroke_offset": -0.3413,
+  "segments": 12,
+  "bytes": 251
  },
  "heading-2": {
   "glyph": "heading",
-  "raw_stroke": 1.031,
+  "raw_stroke": 1.062,
   "kind": "letter",
-  "stroke": 1.0,
+  "stroke": 1.188,
   "stroke_target": 1.2,
   "stroke_ok": true,
   "box": [
@@ -230,32 +265,37 @@
   "box_ok": true,
   "min_pad": 2.0,
   "pad_ok": true,
-  "centring": 0.0,
+  "centring": 0.5,
   "centring_ok": true,
   "roughness": 0.061,
   "ok": true,
-  "crisp": 0.43,
-  "crisp_2x": 0.73,
-  "drift": 0.062,
-  "drift_mean": 0.018,
-  "stroke_spread": 0.188,
-  "snap": 0.3,
-  "snap_mode": "corners",
+  "crisp": 0.48,
+  "crisp_2x": 0.56,
+  "vector_match": 1.0,
+  "vector_worst": 0.013,
+  "hint_match": 1.0,
   "offset": [
    0.0,
-   0.0
+   -0.25
   ],
-  "bytes": 488
+  "draft_transform": [
+   0.012598365670571437,
+   0.10032496111286679,
+   -0.14661645473102158
+  ],
+  "stroke_offset": 0.0754,
+  "segments": 12,
+  "bytes": 270
  },
  "main-file-1": {
   "glyph": "main-file",
-  "raw_stroke": 1.062,
+  "raw_stroke": 1.061,
   "kind": "icon",
-  "stroke": 1.062,
+  "stroke": 1.0,
   "stroke_target": 1.0,
   "stroke_ok": true,
   "box": [
-   12.0,
+   11.88,
    14.0
   ],
   "box_ok": true,
@@ -263,20 +303,25 @@
   "pad_ok": true,
   "centring": 0.0,
   "centring_ok": true,
-  "roughness": 0.151,
+  "roughness": 0.079,
   "ok": true,
-  "crisp": 0.64,
-  "crisp_2x": 0.75,
-  "drift": 0.07,
-  "drift_mean": 0.021,
-  "stroke_spread": 0.125,
-  "snap": 0.3,
-  "snap_mode": "corners",
+  "crisp": 0.59,
+  "crisp_2x": 0.72,
+  "vector_match": 1.0,
+  "vector_worst": 0.017,
+  "hint_match": 1.0,
   "offset": [
    0.0,
    0.0
   ],
-  "bytes": 4897
+  "draft_transform": [
+   0.017479608070637264,
+   -2.961703287904957,
+   -2.9541550773782794
+  ],
+  "stroke_offset": -0.0328,
+  "segments": 27,
+  "bytes": 501
  },
  "main-file-2": {
   "glyph": "main-file",
@@ -286,7 +331,7 @@
   "stroke_target": 1.0,
   "stroke_ok": true,
   "box": [
-   12.0,
+   11.94,
    14.0
   ],
   "box_ok": true,
@@ -294,26 +339,31 @@
   "pad_ok": true,
   "centring": 0.0,
   "centring_ok": true,
-  "roughness": 0.138,
+  "roughness": 0.083,
   "ok": true,
-  "crisp": 0.73,
-  "crisp_2x": 0.83,
-  "drift": 0.392,
-  "drift_mean": 0.092,
-  "stroke_spread": 0.048,
-  "snap": 0.3,
-  "snap_mode": "corners",
+  "crisp": 0.7,
+  "crisp_2x": 0.82,
+  "vector_match": 1.0,
+  "vector_worst": 0.02,
+  "hint_match": 1.0,
   "offset": [
-   -0.25,
-   -0.25
+   0.0,
+   0.0
   ],
-  "bytes": 2955
+  "draft_transform": [
+   0.013829270361215083,
+   -0.6722227408616418,
+   -0.6706298799238258
+  ],
+  "stroke_offset": 0.1795,
+  "segments": 24,
+  "bytes": 454
  },
  "math-display-1": {
   "glyph": "math-display",
   "raw_stroke": 0.969,
   "kind": "letter",
-  "stroke": 1.106,
+  "stroke": 1.25,
   "stroke_target": 1.2,
   "stroke_ok": true,
   "box": [
@@ -325,30 +375,35 @@
   "pad_ok": true,
   "centring": 0.0,
   "centring_ok": true,
-  "roughness": 0.094,
+  "roughness": 0.063,
   "ok": true,
-  "crisp": 0.61,
-  "crisp_2x": 0.92,
-  "drift": 0.281,
-  "drift_mean": 0.122,
-  "stroke_spread": 0.438,
-  "snap": 0.3,
-  "snap_mode": "corners",
+  "crisp": 0.35,
+  "crisp_2x": 0.65,
+  "vector_match": 1.0,
+  "vector_worst": 0.023,
+  "hint_match": 1.0,
   "offset": [
-   -0.25,
-   0.25
+   0.0,
+   0.0
   ],
-  "bytes": 853
+  "draft_transform": [
+   0.016058411440795534,
+   -2.072055424635783,
+   -2.0718890191692942
+  ],
+  "stroke_offset": 0.1258,
+  "segments": 20,
+  "bytes": 389
  },
  "math-display-2": {
   "glyph": "math-display",
-  "raw_stroke": 0.844,
+  "raw_stroke": 0.875,
   "kind": "letter",
-  "stroke": 1.0,
+  "stroke": 1.188,
   "stroke_target": 1.2,
   "stroke_ok": true,
   "box": [
-   10.62,
+   10.56,
    12.0
   ],
   "box_ok": true,
@@ -356,88 +411,103 @@
   "pad_ok": true,
   "centring": 0.0,
   "centring_ok": true,
-  "roughness": 0.081,
+  "roughness": 0.061,
   "ok": true,
-  "crisp": 0.73,
-  "crisp_2x": 0.89,
-  "drift": 0.156,
-  "drift_mean": 0.045,
-  "stroke_spread": 0.0,
-  "snap": 0.3,
-  "snap_mode": "corners",
+  "crisp": 0.5,
+  "crisp_2x": 0.63,
+  "vector_match": 1.0,
+  "vector_worst": 0.019,
+  "hint_match": 1.0,
   "offset": [
    0.0,
    0.0
   ],
-  "bytes": 1162
+  "draft_transform": [
+   0.012738738367221013,
+   0.011607128932774324,
+   0.015858325161149656
+  ],
+  "stroke_offset": 0.1753,
+  "segments": 24,
+  "bytes": 446
  },
  "math-inline-1": {
   "glyph": "math-inline",
-  "raw_stroke": 0.969,
+  "raw_stroke": 0.971,
   "kind": "letter",
-  "stroke": 1.062,
+  "stroke": 1.25,
   "stroke_target": 1.2,
   "stroke_ok": true,
   "box": [
-   12.25,
-   10.25
+   12.0,
+   10.38
   ],
   "box_ok": true,
-  "min_pad": 1.75,
+  "min_pad": 2.0,
   "pad_ok": true,
-  "centring": 0.31,
+  "centring": 0.5,
   "centring_ok": true,
-  "roughness": 0.457,
+  "roughness": 0.188,
   "ok": true,
-  "crisp": 0.55,
-  "crisp_2x": 0.74,
-  "drift": 0.469,
-  "drift_mean": 0.219,
-  "stroke_spread": 0.324,
-  "snap": 0.3,
-  "snap_mode": "corners",
+  "crisp": 0.44,
+  "crisp_2x": 0.69,
+  "vector_match": 1.0,
+  "vector_worst": 0.026,
+  "hint_match": 1.0,
   "offset": [
-   0.25,
-   0.0
+   0.0,
+   -0.25
   ],
-  "bytes": 4642
+  "draft_transform": [
+   0.018231403412088322,
+   -3.6436134761272774,
+   -3.0055264164551923
+  ],
+  "stroke_offset": 0.1247,
+  "segments": 37,
+  "bytes": 828
  },
  "math-inline-2": {
   "glyph": "math-inline",
-  "raw_stroke": 0.795,
+  "raw_stroke": 0.789,
   "kind": "letter",
-  "stroke": 1.127,
+  "stroke": 1.194,
   "stroke_target": 1.2,
   "stroke_ok": true,
   "box": [
-   12.19,
-   10.66
+   12.0,
+   10.62
   ],
   "box_ok": true,
-  "min_pad": 1.81,
+  "min_pad": 2.0,
   "pad_ok": true,
-  "centring": 0.22,
+  "centring": 0.5,
   "centring_ok": true,
-  "roughness": 0.571,
+  "roughness": 0.218,
   "ok": true,
-  "crisp": 0.47,
-  "crisp_2x": 0.64,
-  "drift": 0.364,
-  "drift_mean": 0.175,
-  "stroke_spread": 0.272,
-  "snap": 0.3,
-  "snap_mode": "corners",
+  "crisp": 0.44,
+  "crisp_2x": 0.6,
+  "vector_match": 1.0,
+  "vector_worst": 0.029,
+  "hint_match": 1.0,
   "offset": [
-   0.25,
-   0.0
+   0.0,
+   0.25
   ],
-  "bytes": 4185
+  "draft_transform": [
+   0.01393050934052769,
+   -0.8181977360389251,
+   0.1041632833306598
+  ],
+  "stroke_offset": 0.2194,
+  "segments": 36,
+  "bytes": 792
  },
  "section-1": {
   "glyph": "section",
-  "raw_stroke": 1.035,
+  "raw_stroke": 1.039,
   "kind": "letter",
-  "stroke": 1.125,
+  "stroke": 1.194,
   "stroke_target": 1.2,
   "stroke_ok": true,
   "box": [
@@ -449,26 +519,31 @@
   "pad_ok": true,
   "centring": 0.5,
   "centring_ok": true,
-  "roughness": 0.251,
+  "roughness": 0.134,
   "ok": true,
-  "crisp": 0.55,
-  "crisp_2x": 0.7,
-  "drift": 0.062,
-  "drift_mean": 0.026,
-  "stroke_spread": 0.258,
-  "snap": 0.3,
-  "snap_mode": "corners",
+  "crisp": 0.47,
+  "crisp_2x": 0.63,
+  "vector_match": 0.9997,
+  "vector_worst": 0.031,
+  "hint_match": 1.0,
   "offset": [
    -0.25,
    0.0
   ],
-  "bytes": 3437
+  "draft_transform": [
+   0.013848844852613531,
+   -0.9484963746869021,
+   -0.626805790063016
+  ],
+  "stroke_offset": 0.0882,
+  "segments": 48,
+  "bytes": 1604
  },
  "section-2": {
   "glyph": "section",
-  "raw_stroke": 0.85,
+  "raw_stroke": 0.844,
   "kind": "letter",
-  "stroke": 1.147,
+  "stroke": 1.188,
   "stroke_target": 1.2,
   "stroke_ok": true,
   "box": [
@@ -480,119 +555,139 @@
   "pad_ok": true,
   "centring": 0.5,
   "centring_ok": true,
-  "roughness": 0.222,
+  "roughness": 0.207,
   "ok": true,
   "crisp": 0.44,
-  "crisp_2x": 0.64,
-  "drift": 0.267,
-  "drift_mean": 0.103,
-  "stroke_spread": 0.146,
-  "snap": 0.3,
-  "snap_mode": "corners",
+  "crisp_2x": 0.65,
+  "vector_match": 1.0,
+  "vector_worst": 0.027,
+  "hint_match": 1.0,
   "offset": [
    -0.25,
    0.0
   ],
-  "bytes": 4604
+  "draft_transform": [
+   0.011598073576261008,
+   0.47968115061200933,
+   0.579269886046354
+  ],
+  "stroke_offset": 0.1916,
+  "segments": 50,
+  "bytes": 1710
  },
  "theme-dark-1": {
   "glyph": "theme-dark",
-  "raw_stroke": 1.12,
+  "raw_stroke": 1.119,
   "kind": "icon",
   "stroke": 1.008,
   "stroke_target": 1.0,
   "stroke_ok": true,
   "box": [
-   10.62,
-   13.94
-  ],
-  "box_ok": true,
-  "min_pad": 1.0,
-  "pad_ok": true,
-  "centring": 0.06,
-  "centring_ok": true,
-  "roughness": 0.424,
-  "ok": true,
-  "crisp": 0.4,
-  "crisp_2x": 0.57,
-  "drift": 0.031,
-  "drift_mean": 0.021,
-  "stroke_spread": 0.046,
-  "snap": 0.3,
-  "snap_mode": "corners",
-  "offset": [
-   0.0,
-   0.0
-  ],
-  "bytes": 15329
- },
- "theme-dark-2": {
-  "glyph": "theme-dark",
-  "raw_stroke": 0.95,
-  "kind": "icon",
-  "stroke": 1.008,
-  "stroke_target": 1.0,
-  "stroke_ok": true,
-  "box": [
-   10.34,
+   10.75,
    14.0
   ],
   "box_ok": true,
   "min_pad": 1.0,
   "pad_ok": true,
-  "centring": 0.34,
+  "centring": 0.0,
   "centring_ok": true,
-  "roughness": 0.21,
+  "roughness": 0.07,
   "ok": true,
   "crisp": 0.41,
-  "crisp_2x": 0.6,
-  "drift": 0.438,
-  "drift_mean": 0.149,
-  "stroke_spread": 0.043,
-  "snap": 0.3,
-  "snap_mode": "corners",
+  "crisp_2x": 0.58,
+  "vector_match": 1.0,
+  "vector_worst": 0.028,
+  "hint_match": 1.0,
+  "offset": [
+   0.0,
+   0.0
+  ],
+  "draft_transform": [
+   0.019847440705755868,
+   -3.6099825452683385,
+   -4.46398905693747
+  ],
+  "stroke_offset": -0.0646,
+  "segments": 135,
+  "bytes": 3637
+ },
+ "theme-dark-2": {
+  "glyph": "theme-dark",
+  "raw_stroke": 0.952,
+  "kind": "icon",
+  "stroke": 1.008,
+  "stroke_target": 1.0,
+  "stroke_ok": true,
+  "box": [
+   10.12,
+   14.0
+  ],
+  "box_ok": true,
+  "min_pad": 1.0,
+  "pad_ok": true,
+  "centring": 0.5,
+  "centring_ok": true,
+  "roughness": 0.087,
+  "ok": true,
+  "crisp": 0.37,
+  "crisp_2x": 0.59,
+  "vector_match": 0.9993,
+  "vector_worst": 0.032,
+  "hint_match": 1.0,
   "offset": [
    -0.25,
    0.0
   ],
-  "bytes": 5634
+  "draft_transform": [
+   0.01604651110288557,
+   -1.4633593975841659,
+   -2.084940814107425
+  ],
+  "stroke_offset": 0.0255,
+  "segments": 122,
+  "bytes": 3192
  },
  "theme-light-1": {
   "glyph": "theme-light",
-  "raw_stroke": 0.932,
+  "raw_stroke": 0.95,
   "kind": "icon",
-  "stroke": 0.978,
+  "stroke": 1.0,
   "stroke_target": 1.0,
   "stroke_ok": true,
   "box": [
-   14.0,
+   13.88,
    14.0
   ],
   "box_ok": true,
-  "min_pad": 0.75,
+  "min_pad": 1.0,
   "pad_ok": true,
-  "centring": 0.5,
+  "centring": 0.0,
   "centring_ok": true,
-  "roughness": 0.205,
+  "roughness": 0.0,
   "ok": true,
-  "crisp": 0.22,
-  "crisp_2x": 0.53,
-  "drift": 0.25,
-  "drift_mean": 0.103,
-  "stroke_spread": 0.054,
-  "snap": 0.3,
-  "snap_mode": "corners",
+  "crisp": 0.19,
+  "crisp_2x": 0.6,
+  "vector_match": 0.9974,
+  "vector_worst": 0.033,
+  "hint_match": 1.0,
   "offset": [
    0.0,
-   -0.25
+   0.0
   ],
-  "bytes": 6036
+  "draft_transform": [
+   0.016603006571637473,
+   -2.416755032409048,
+   -2.3775150984419846
+  ],
+  "stroke_offset": 0.0266,
+  "segments": 60,
+  "bytes": 1553
  },
  "theme-light-2": {
   "glyph": "theme-light",
-  "raw_stroke": 0.593,
+  "raw_stroke": 0.594,
   "kind": "icon",
-  "stroke": 0.97,
+  "stroke": 1.008,
   "stroke_target": 1.0,
   "stroke_ok": true,
   "box": [
@@ -604,20 +699,25 @@
   "pad_ok": true,
   "centring": 0.0,
   "centring_ok": true,
-  "roughness": 0.249,
+  "roughness": 0.0,
   "ok": true,
-  "crisp": 0.31,
-  "crisp_2x": 0.59,
-  "drift": 0.719,
-  "drift_mean": 0.422,
-  "stroke_spread": 0.116,
-  "snap": 0.3,
-  "snap_mode": "corners",
+  "crisp": 0.19,
+  "crisp_2x": 0.61,
+  "vector_match": 1.0,
+  "vector_worst": 0.029,
+  "hint_match": 1.0,
   "offset": [
-   -0.25,
-   0.25
+   0.0,
+   0.0
   ],
-  "bytes": 5854
+  "draft_transform": [
+   0.013861355597324041,
+   -0.6920874837637094,
+   -0.6898217273954466
+  ],
+  "stroke_offset": 0.2121,
+  "segments": 59,
+  "bytes": 1488
  },
  "typst-file-1": {
   "glyph": "typst-file",
@@ -635,30 +735,35 @@
   "pad_ok": true,
   "centring": 0.0,
   "centring_ok": true,
-  "roughness": 0.104,
+  "roughness": 0.081,
   "ok": true,
-  "crisp": 0.37,
-  "crisp_2x": 0.86,
-  "drift": 0.312,
-  "drift_mean": 0.133,
-  "stroke_spread": 0.062,
-  "snap": 0.3,
-  "snap_mode": "corners",
+  "crisp": 0.31,
+  "crisp_2x": 0.79,
+  "vector_match": 0.9997,
+  "vector_worst": 0.034,
+  "hint_match": 1.0,
   "offset": [
    0.0,
    0.0
   ],
-  "bytes": 1286
+  "draft_transform": [
+   0.0169357836582718,
+   -2.6191593872258228,
+   -2.6145045215143767
+  ],
+  "stroke_offset": -0.0169,
+  "segments": 32,
+  "bytes": 645
  },
  "typst-file-2": {
   "glyph": "typst-file",
-  "raw_stroke": 0.75,
+  "raw_stroke": 0.781,
   "kind": "icon",
   "stroke": 1.0,
   "stroke_target": 1.0,
   "stroke_ok": true,
   "box": [
-   12.0,
+   11.75,
    14.0
   ],
   "box_ok": true,
@@ -666,19 +771,24 @@
   "pad_ok": true,
   "centring": 0.0,
   "centring_ok": true,
-  "roughness": 0.095,
+  "roughness": 0.08,
   "ok": true,
-  "crisp": 0.79,
-  "crisp_2x": 0.87,
-  "drift": 0.253,
-  "drift_mean": 0.055,
-  "stroke_spread": 0.0,
-  "snap": 0.3,
-  "snap_mode": "corners",
+  "crisp": 0.64,
+  "crisp_2x": 0.53,
+  "vector_match": 1.0,
+  "vector_worst": 0.028,
+  "hint_match": 1.0,
   "offset": [
    0.0,
-   0.25
+   0.0
   ],
-  "bytes": 1172
+  "draft_transform": [
+   0.013906013240656377,
+   -0.7227451369216846,
+   -0.7262464419248951
+  ],
+  "stroke_offset": 0.1158,
+  "segments": 35,
+  "bytes": 771
  }
 }

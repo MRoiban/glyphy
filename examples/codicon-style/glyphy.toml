@@ -21,12 +21,14 @@ roughness_max = 0.0
 locked = []
 
 [trace]
+method = "vector"
 work_scale = 64
 threshold = 128
 speck = 0.25
 fit = true
 correct = true
 stroke_shape = "cross"
+mitre_limit = 2.0
 rounds = 5
 stroke_epsilon = 0.04
 smooth = 0.0
@@ -36,11 +38,28 @@ snap = 0.3
 straighten = 4.0
 offsets = 4
 centring_weight = 0.0
+choose = "crisp"
+weight_crisp_2x = 1.0
+weight_drift = 0.5
+weight_spread = 1.0
+weight_rough = 1.0
 turdsize = 16
 alphamax = 0.9
 opticurve = true
 opttolerance = 0.2
 decimals = 3
+corner_deg = 32.0
+corner_scale = 0.12
+line_tol = 0.03
+min_line = 0.25
+curve_tol = 0.025
+snap_deg = 2.5
+parallel_deg = 2.0
+max_extend = 0.5
+straight_min = 0.5
+vector_mitre_limit = 4.0
+hint = false
+hint_min_len = 0.5
 
 [paths]
 reference = "reference"
