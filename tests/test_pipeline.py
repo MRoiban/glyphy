@@ -2,6 +2,7 @@
 from pathlib import Path
 
 import numpy as np
+import pytest
 from PIL import Image
 from scipy import ndimage
 
@@ -79,11 +80,24 @@ def test_trace_corrects_a_thick_draft(tmp_path):
     assert m.min_pad >= project.style["pad_min"] - 0.01
 
 
-def test_offsets_cover_half_a_unit():
-    # Regression: 4 offsets once tried {0, -0.25, 0, +0.25} and never -0.5.
-    work, offsets = 64, 4
-    shifts = [round(k * work / offsets) - work // 2 for k in range(offsets)]
-    assert shifts == [-32, -16, 0, 16]
+def test_offset_shifts():
+    from glyphy.trace import offset_shifts
+    assert offset_shifts(64, 4) == [0, -16, 16]
+    assert offset_shifts(64, 1) == [0]
+
+
+EXAMPLE = Path(__file__).resolve().parents[1] / "examples" / "codicon-style"
+
+
+def test_defaults_reproduce_the_example():
+    """The defaults are the pipeline that made Typewriter's glyphs; the example pins them."""
+    from glyphy.trace import trace_file
+    project = load(EXAMPLE)
+    for stem in ["heading-2", "theme-light-2"]:
+        svg, report = trace_file(project, EXAMPLE / "generated" / f"{stem}.png")
+        picked = EXAMPLE / "glyphs" / f"{stem.rsplit('-', 1)[0]}.svg"
+        assert report["ok"]
+        assert not (render_svg(svg, 512) != render_svg(picked, 512)).any(), stem
 
 
 def test_pick_and_export(tmp_path):
@@ -95,3 +109,40 @@ def test_pick_and_export(tmp_path):
     pick(project, best=True)
     ts = export(project, "ts", tmp_path / "glyphs.ts").read_text()
     assert '"box":' in ts and "GLYPH_GRID = 16" in ts
+
+
+def test_roughness_counts_wobble_not_size():
+    from glyphy.metrics import roughness
+    clean = outline_icon()
+    # The same square with a saw-toothed top edge.
+    teeth = "".join(f"L{x + 0.25} {1.35 if i % 2 else 1}" for i, x in enumerate(np.arange(1, 15, 0.5)))
+    rough = (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill-rule="evenodd" '
+             f'd="M1 1{teeth}L15 1V15H1Z M2 2.4V14H14V2.4Z"/></svg>')
+    # One toothed edge among long clean ones still exceeds the roughest Codicon (0.24).
+    assert roughness(clean, GRID) < 0.05
+    assert roughness(rough, GRID) > 0.24
+
+
+@pytest.mark.parametrize("mode", ["corners", "edges"])
+def test_straight_edges_land_on_pixels(tmp_path, mode):
+    from glyphy.metrics import crispness
+    from glyphy.trace import to_svg
+    project = make_project(tmp_path)
+    cfg = {**project.settings(), "snap_mode": mode}
+    # A square outline drawn slightly off the pixel grid and a little crooked.
+    mask = render_svg(outline_icon(), GRID * 64)
+    mask = np.roll(mask, (9, -7), axis=(0, 1))
+    svg = to_svg(mask, cfg, GRID)
+    assert crispness(svg, GRID) > 0.95
+
+
+def test_svg_drafts_are_taken_as_drawn(tmp_path):
+    project = make_project(tmp_path)
+    main(["add", "-p", str(project.root), "box", "a square outline"])
+    # Smaller than the live area: fitting would scale it, as-drawn must not.
+    (project.path("generated") / "box-1.svg").write_text(outline_icon(inset=3.0))
+    result = trace_all(load(project.root))["box-1"]
+    assert result["box"] == [10.0, 10.0] and result["crisp"] == 1.0
+    main(["set", "-p", str(project.root), "trace.svg_as_drawn=false"])
+    result = trace_all(load(project.root))["box-1"]
+    assert result["box"][0] > 13  # fitted (then thinned back to a 1-unit stroke)

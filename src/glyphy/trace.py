@@ -1,17 +1,23 @@
 """Draft image → style-conformant SVG, verified by measurement.
 
-Per draft (every number comes from `Project.settings(glyph)`, so any step can be
-tuned globally in [trace]/[style] or for one glyph in [glyphs.<name>]):
+The defaults reproduce the pipeline that made Typewriter's glyphs. Per draft
+(every number comes from `Project.settings(glyph)`, so any step can be tuned
+globally in [trace]/[style] or for one glyph in [glyphs.<name>]):
 
-1. Ink mask at `work_scale` px per grid unit (`threshold`, `speck`).
-2. Fit into the target box (`fit`; icons: live × live, letters: letter_height
-   tall; a glyph may set its own `box = [w, h]`).
-3. Correct the stroke from measurement (`correct`, `rounds`, `stroke_epsilon`;
-   a glyph may force `stroke_target`).
-4. Trace with potrace (`turdsize`, `alphamax`, `opticurve`, `opttolerance`);
-   snap straight corners near whole pixels (`snap`); try sub-pixel offsets and
-   keep the most crisp result that passes (`offsets`).
-5. Re-render and measure with the same code as the references.
+1. Ink mask at the draft's own resolution (`threshold`, `speck` in units²).
+2. Fit into the target box (`fit`; icons: live × live, letterforms: a
+   letter_height square, both in whole units; a glyph may set `box = [w, h]`).
+3. Correct the stroke from measurement (`correct`, `rounds`, `stroke_epsilon`,
+   `stroke_shape`); letterforms aim at the references' letter stroke, and a
+   glyph may force `stroke_target`.
+4. Optionally iron out draft noise (`smooth`, off by default).
+5. Trace with potrace (`turdsize`, `alphamax`, `opticurve`, `opttolerance`),
+   move straight corners onto whole pixels (`snap`, `snap_mode`), try
+   sub-pixel offsets and keep the crispest result that passes (`offsets`).
+6. Re-render and measure with the same code as the references.
+
+SVG drafts drawn on the grid can be taken as drawn instead (`svg_as_drawn`):
+only steps 5 and 6 apply, without the offset search.
 
 The functions are public so they can be composed differently from Python.
 """
@@ -25,7 +31,7 @@ from PIL import Image
 from scipy import ndimage
 
 from .config import Project
-from .metrics import Metrics, crispness, measure, measure_svg
+from .metrics import Metrics, crispness, measure, measure_svg, roughness
 from .raster import RASTER_SUFFIXES, glyph_files, render_svg
 
 
@@ -39,7 +45,10 @@ def box_for(cfg: dict) -> tuple[float, float]:
     if "box" in cfg:
         return float(cfg["box"][0]), float(cfg["box"][1])
     if cfg.get("kind") == "letter":
-        return float(cfg["live"]), float(cfg["letter_height"])
+        # Letterforms sit in a square as tall as the references' letters, in whole units
+        # so their edges can meet pixel lines.
+        side = float(max(1, round(float(cfg["letter_height"]))))
+        return side, side
     return float(cfg["live"]), float(cfg["live"])
 
 
@@ -47,21 +56,24 @@ def stroke_target(cfg: dict, measured: float) -> float:
     if "stroke_target" in cfg:
         return float(cfg["stroke_target"])
     if cfg.get("kind") == "letter":
-        low, high = cfg["letter_stroke"]
-        return float(min(max(measured, low), high))
+        return float(cfg["letter_stroke_target"])
     return float(cfg["stroke"])
 
 
 def ink_mask(path: Path, cfg: dict, grid: int) -> np.ndarray:
+    """Ink at the draft's own resolution; `fit` resamples it once, from the full detail."""
     size = grid * int(cfg["work_scale"])
     if path.suffix.lower() not in RASTER_SUFFIXES:
         return render_svg(path, size)
-    pixels = np.array(Image.open(path).convert("L").resize((size, size), Image.LANCZOS), dtype=float)
+    pixels = np.array(Image.open(path).convert("L"), dtype=float)
     mask = pixels < float(cfg["threshold"])
     labels, count = ndimage.label(mask)
     if count:
         sizes = ndimage.sum(mask, labels, range(1, count + 1))
-        mask = np.isin(labels, np.nonzero(sizes >= mask.size * float(cfg["speck"]))[0] + 1)
+        unit_px = pixels.shape[0] / grid
+        mask = np.isin(labels, np.nonzero(sizes >= float(cfg["speck"]) * unit_px ** 2)[0] + 1)
+    if not cfg["fit"] and mask.shape != (size, size):
+        mask = np.array(Image.fromarray((mask * 255).astype("uint8")).resize((size, size), Image.LANCZOS)) > 127
     return mask
 
 
@@ -78,12 +90,28 @@ def fit(mask: np.ndarray, grid: int, work: int, box_w: float, box_h: float) -> n
     return canvas
 
 
-def adjust_stroke(mask: np.ndarray, grid: int, work: int, target: float) -> np.ndarray:
+def adjust_stroke(mask: np.ndarray, grid: int, work: int, target: float, shape: str = "cross") -> np.ndarray:
+    """Grow or shrink the ink by half the stroke error.
+
+    "cross" (default) repeats a 3×3 cross erosion/dilation; "round" uses exact
+    Euclidean distance, which rounds outer corners when growing.
+    """
     radius = (target - measure(mask, work, grid).stroke) / 2 * work
     if not np.isfinite(radius) or abs(radius) < 1:
         return mask
+    if shape == "round":
+        if radius > 0:
+            return ndimage.distance_transform_edt(~mask) <= radius
+        return ndimage.distance_transform_edt(mask) > -radius
     op = ndimage.binary_dilation if radius > 0 else ndimage.binary_erosion
     return op(mask, ndimage.generate_binary_structure(2, 1), iterations=int(round(abs(radius))))
+
+
+def smooth(mask: np.ndarray, radius: float, work: int) -> np.ndarray:
+    """Blur and re-threshold: removes wobble narrower than `radius` units, keeps edges in place."""
+    if radius <= 0:
+        return mask
+    return ndimage.gaussian_filter(mask.astype(float), radius * work) > 0.5
 
 
 def normalise(mask: np.ndarray, cfg: dict, grid: int) -> tuple[np.ndarray, float, float]:
@@ -95,7 +123,7 @@ def normalise(mask: np.ndarray, cfg: dict, grid: int) -> tuple[np.ndarray, float
     if not cfg["correct"]:
         return current, raw, target
     for _ in range(int(cfg["rounds"])):
-        current = adjust_stroke(current, grid, work, target)
+        current = adjust_stroke(current, grid, work, target, str(cfg["stroke_shape"]))
         m = measure(current, work, grid)
         if cfg["fit"] and max(m.width - box[0], m.height - box[1]) > 0.05:
             current = fit(current, grid, work, *box)
@@ -105,14 +133,44 @@ def normalise(mask: np.ndarray, cfg: dict, grid: int) -> tuple[np.ndarray, float
     return current, raw, target
 
 
-def to_svg(mask: np.ndarray, cfg: dict, grid: int) -> str:
-    import potrace
-
-    snap, work, decimals = float(cfg["snap"]), int(cfg["work_scale"]), int(cfg["decimals"])
-
+def _corner_snapped_path(curve, k: float, snap: float, num) -> list[str]:
+    """Snap every straight corner near a whole pixel onto it; curve ends stay put."""
     def snapped(v: float) -> float:
         nearest = round(v)
         return float(nearest) if abs(v - nearest) <= snap else v
+
+    start = (curve.start_point.x * k, curve.start_point.y * k)
+    sx, sy = snapped(start[0]), snapped(start[1])
+    prev_shift = (sx - start[0], sy - start[1])
+    parts = [f"M{num(sx)} {num(sy)}"]
+    for seg in curve.segments:
+        end = (seg.end_point.x * k, seg.end_point.y * k)
+        # Snapping curve endpoints makes round shapes lumpy; only straight runs snap.
+        ex, ey = (snapped(end[0]), snapped(end[1])) if seg.is_corner else end
+        shift = (ex - end[0], ey - end[1])
+        if seg.is_corner:
+            parts.append(f"L{num(snapped(seg.c.x * k))} {num(snapped(seg.c.y * k))}L{num(ex)} {num(ey)}")
+        else:
+            # Handles move with the endpoint they belong to, so snapped curves keep their tangents.
+            c1 = (seg.c1.x * k + prev_shift[0], seg.c1.y * k + prev_shift[1])
+            c2 = (seg.c2.x * k + shift[0], seg.c2.y * k + shift[1])
+            parts.append(f"C{num(c1[0])} {num(c1[1])} {num(c2[0])} {num(c2[1])} {num(ex)} {num(ey)}")
+        prev_shift = shift
+    parts.append("Z")
+    return parts
+
+
+def to_svg(mask: np.ndarray, cfg: dict, grid: int) -> str:
+    """Trace a mask at `work_scale` px per unit into a filled-path SVG on the grid.
+
+    `snap_mode = "corners"` (default) snaps straight corners near whole pixels.
+    `"edges"` first makes near-horizontal/vertical edges exact (`straighten`
+    degrees), then moves only those edges onto pixel lines.
+    """
+    import potrace
+
+    work, decimals = int(cfg["work_scale"]), int(cfg["decimals"])
+    snap, slope = float(cfg["snap"]), np.tan(np.radians(float(cfg["straighten"])))
 
     def num(v: float) -> str:
         return f"{v:.{decimals}f}".rstrip("0").rstrip(".") if decimals else str(round(v))
@@ -123,41 +181,83 @@ def to_svg(mask: np.ndarray, cfg: dict, grid: int) -> str:
     k = 1 / work
     parts = []
     for curve in paths:
-        start = (curve.start_point.x * k, curve.start_point.y * k)
-        sx, sy = snapped(start[0]), snapped(start[1])
-        prev_shift = (sx - start[0], sy - start[1])
-        parts.append(f"M{num(sx)} {num(sy)}")
+        if cfg["snap_mode"] != "edges":
+            parts += _corner_snapped_path(curve, k, snap, num)
+            continue
+        # Nodes of the closed outline; the last segment ends where the outline starts.
+        pts = [[curve.start_point.x * k, curve.start_point.y * k]]
+        ops = []  # ("L", i) or ("C", c1, c2, i): from the previous node to node i
         for seg in curve.segments:
-            end = (seg.end_point.x * k, seg.end_point.y * k)
-            # Only straight runs snap: snapping curve endpoints makes round shapes lumpy.
-            ex, ey = (snapped(end[0]), snapped(end[1])) if seg.is_corner else end
-            shift = (ex - end[0], ey - end[1])
             if seg.is_corner:
-                parts.append(f"L{num(snapped(seg.c.x * k))} {num(snapped(seg.c.y * k))}L{num(ex)} {num(ey)}")
+                pts.append([seg.c.x * k, seg.c.y * k])
+                ops.append(("L", len(pts) - 1))
+            end = len(pts)
+            pts.append([seg.end_point.x * k, seg.end_point.y * k])
+            ops.append(("L", end) if seg.is_corner else
+                       ("C", (seg.c1.x * k, seg.c1.y * k), (seg.c2.x * k, seg.c2.y * k), end))
+        last = len(pts) - 1
+        idx = lambda i: 0 if i == last else i  # noqa: E731
+        pts = np.array(pts[:-1])
+        original = pts.copy()
+        vertical, horizontal = np.zeros(len(pts), bool), np.zeros(len(pts), bool)
+        prev = 0
+        # Straighten near-axis lines, then move only those edges onto pixel lines, so a
+        # corner potrace finds inside a curve is never pulled sideways into a tooth.
+        for op in ops:
+            i = idx(op[-1])
+            if op[0] == "L" and i != prev:
+                dx, dy = pts[i] - pts[prev]
+                if abs(dx) <= slope * abs(dy):
+                    pts[[prev, i], 0] = pts[[prev, i], 0].mean()
+                    vertical[[prev, i]] = True
+                elif abs(dy) <= slope * abs(dx):
+                    pts[[prev, i], 1] = pts[[prev, i], 1].mean()
+                    horizontal[[prev, i]] = True
+            prev = i
+        for axis, flags in ((0, vertical), (1, horizontal)):
+            near = np.round(pts[:, axis])
+            move = flags & (np.abs(pts[:, axis] - near) <= snap)
+            pts[move, axis] = near[move]
+        shift = pts - original
+        parts.append(f"M{num(pts[0][0])} {num(pts[0][1])}")
+        prev = 0
+        for op in ops:
+            i = idx(op[-1])
+            if op[0] == "L":
+                parts.append(f"L{num(pts[i][0])} {num(pts[i][1])}")
             else:
-                c1 = (seg.c1.x * k + prev_shift[0], seg.c1.y * k + prev_shift[1])
-                c2 = (seg.c2.x * k + shift[0], seg.c2.y * k + shift[1])
-                parts.append(f"C{num(c1[0])} {num(c1[1])} {num(c2[0])} {num(c2[1])} {num(ex)} {num(ey)}")
-            prev_shift = shift
+                # Control points travel with their end nodes so curves keep their shape.
+                c1 = (op[1][0] + shift[prev][0], op[1][1] + shift[prev][1])
+                c2 = (op[2][0] + shift[i][0], op[2][1] + shift[i][1])
+                parts.append(f"C{num(c1[0])} {num(c1[1])} {num(c2[0])} {num(c2[1])} {num(pts[i][0])} {num(pts[i][1])}")
+            prev = i
         parts.append("Z")
     return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {grid} {grid}" fill="currentColor">'
             f'<path fill-rule="evenodd" d="{"".join(parts)}"/></svg>\n')
 
 
-def check(m: Metrics, cfg: dict, target: float) -> dict:
+def check(m: Metrics, cfg: dict, target: float, rough: float | None = None) -> dict:
     if cfg.get("kind") == "letter" and "stroke_target" not in cfg:
         low, high = cfg["letter_stroke"]
         stroke_ok = low <= m.stroke <= high
     else:
         stroke_ok = abs(m.stroke - target) <= float(cfg["stroke_tolerance"])
+    # The fitting box is a target; the rule is the live area (or a larger custom box).
     box = box_for(cfg)
+    limit = (max(box[0], float(cfg["live"])), max(box[1], float(cfg["live"])))
     result = {
         "kind": cfg.get("kind", "icon"), "stroke": round(m.stroke, 3), "stroke_target": round(target, 3), "stroke_ok": bool(stroke_ok),
-        "box": [round(m.width, 2), round(m.height, 2)], "box_ok": m.width <= box[0] + 0.1 and m.height <= max(box) + 0.1,
-        "min_pad": round(m.min_pad, 2), "pad_ok": m.min_pad >= float(cfg["pad_min"]) - 0.01,
-        "centring": round(m.centring, 2), "centring_ok": m.centring <= float(cfg["centring_max"]),
+        "box": [round(m.width, 2), round(m.height, 2)], "box_ok": bool(max(m.width - limit[0], m.height - limit[1]) <= 0.05),
+        "min_pad": round(m.min_pad, 2), "pad_ok": bool(m.min_pad >= float(cfg["pad_min"]) - 0.01),
+        "centring": round(m.centring, 2), "centring_ok": bool(m.centring <= float(cfg["centring_max"])),
     }
-    result["ok"] = all(result[k] for k in ["stroke_ok", "box_ok", "pad_ok", "centring_ok"])
+    keys = ["stroke_ok", "box_ok", "pad_ok", "centring_ok"]
+    if rough is not None:
+        result["roughness"] = round(rough, 3)
+        if float(cfg["roughness_max"]) > 0:
+            result["roughness_ok"] = bool(rough <= float(cfg["roughness_max"]))
+            keys.append("roughness_ok")
+    result["ok"] = all(result[k] for k in keys)
     return result
 
 
@@ -169,7 +269,20 @@ def check_svg(project: Project, svg, kind: str | None = None, overrides: dict | 
     m = measure_svg(svg, project.grid)
     if m is None:
         return {"ok": False, "error": "no ink"}
-    return {**check(m, cfg, stroke_target(cfg, m.stroke)), "crisp": round(crispness(svg, project.grid), 2)}
+    return {**check(m, cfg, stroke_target(cfg, m.stroke), roughness(svg, project.grid)), **_crisp(svg, project.grid)}
+
+
+def _crisp(svg, grid: int) -> dict:
+    # At 2× (high-density screens) a glyph that is only crisp at 1× shows its true edges.
+    return {"crisp": round(crispness(svg, grid), 2), "crisp_2x": round(crispness(svg, grid, 2), 2)}
+
+
+def offset_shifts(work: int, offsets: int) -> list[int]:
+    """Pixel shifts tried per axis: no shift first, then steps of 1/offsets unit
+    around it (4 → 0, -0.25, +0.25 units; 8 → 0, -0.375 … +0.375)."""
+    step = max(1, work // max(1, offsets))
+    shifts = [d - work // 2 if d else 0 for d in range(0, work, step)]
+    return list(dict.fromkeys(shifts))
 
 
 def trace_file(project: Project, path: Path, overrides: dict | None = None) -> tuple[str, dict]:
@@ -180,10 +293,15 @@ def trace_file(project: Project, path: Path, overrides: dict | None = None) -> t
     mask = ink_mask(path, cfg, grid)
     if not mask.any():
         return "", {"glyph": name, "ok": False, "error": "no ink found"}
-    normal, raw, target = normalise(mask, cfg, grid)
-    offsets = max(1, int(cfg["offsets"]))
-    # Evenly spaced shifts across one grid unit, e.g. 4 → -0.5, -0.25, 0, +0.25 units.
-    shifts = [round(k * work / offsets) - work // 2 for k in range(offsets)] if offsets > 1 else [0]
+    as_drawn = path.suffix.lower() not in RASTER_SUFFIXES and bool(cfg["svg_as_drawn"])
+    if as_drawn:
+        normal, raw = mask, measure(mask, work, grid).stroke
+        target = stroke_target(cfg, raw)
+    else:
+        normal, raw, target = normalise(mask, cfg, grid)
+        normal = smooth(normal, float(cfg["smooth"]), work)
+    offsets = 1 if as_drawn else max(1, int(cfg["offsets"]))
+    shifts = offset_shifts(work, offsets)
     best = None
     for dy in shifts:
         for dx in shifts:
@@ -196,10 +314,12 @@ def trace_file(project: Project, path: Path, overrides: dict | None = None) -> t
             # Prefer crisp edges, but not at any cost in centring.
             score = (result["ok"], result["crisp"] - float(cfg["centring_weight"]) * result["centring"])
             if best is None or score > best[0]:
-                best = (score, svg, result)
+                best = (score, svg, m)
     if best is None:
         return "", {"glyph": name, "ok": False, "error": "tracing produced no ink"}
-    _, svg, result = best
+    # Roughness hardly depends on the offset, so it is measured once, on the winner.
+    _, svg, m = best
+    result = {**check(m, cfg, target, roughness(svg, grid)), **_crisp(svg, grid)}
     return svg, {"glyph": name, "raw_stroke": round(raw, 3), **result, "bytes": len(svg)}
 
 

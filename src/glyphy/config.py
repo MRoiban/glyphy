@@ -14,11 +14,14 @@ DEFAULT_STYLE = {
     "stroke": 1.0,           # measured: outline stroke width in grid units
     "stroke_tolerance": 0.12,
     "letter_stroke": [0.95, 1.45],  # measured: stroke range accepted for letterforms
+    "letter_stroke_target": 1.2,    # measured: letterforms are corrected towards this stroke
     "live": 14.0,            # measured: largest ink box side for icons
-    "letter_height": 12.0,   # measured: letterform height
+    "letter_height": 12.0,   # measured: letterform height (letterforms fit this square)
     "pad_min": 0.75,         # measured: smallest padding allowed
     "centring_max": 0.5,     # |pad_l - pad_r| + |pad_t - pad_b|
     "crisp_reference": 0.59, # measured: median crispness of the references (informational)
+    "roughness_reference": 0.24,  # measured: wobble of the roughest reference (informational)
+    "roughness_max": 0.0,    # fail glyphs rougher than this (0 = report only)
     "locked": [],            # style keys `glyphy measure` must not overwrite
 }
 
@@ -26,19 +29,24 @@ DEFAULT_STYLE = {
 DEFAULT_TRACE = {
     "work_scale": 64,        # px per grid unit while normalising and tracing
     "threshold": 128,        # gray level below which a draft pixel counts as ink
-    "speck": 0.0005,         # drop ink blobs smaller than this share of the image
+    "speck": 0.25,           # drop ink blobs smaller than this many square units
     "fit": True,             # scale and centre the draft into the target box
     "correct": True,         # erode/dilate towards the target stroke
+    "stroke_shape": "cross", # "cross": 3×3 cross steps; "round": exact distance (rounds grown corners)
     "rounds": 5,             # fit/correct iterations
     "stroke_epsilon": 0.04,  # stop correcting within this many units of the target
-    "snap": 0.3,             # straight corners within this many units of a pixel snap to it (0 = off)
-    "offsets": 4,            # sub-pixel offsets per axis tried for crispness (1 = off)
-    "centring_weight": 0.15, # offset choice: crispness minus this × off-centring (units)
+    "smooth": 0.0,           # blur radius (units) to iron out noisy drafts before tracing (0 = off)
+    "svg_as_drawn": True,    # SVG drafts are exact: skip fit, correction, smoothing and offsets
+    "snap_mode": "corners",  # "corners": snap straight corners; "edges": straighten axis edges, snap only those
+    "snap": 0.3,             # move points within this many units of a whole pixel onto it (0 = off)
+    "straighten": 4.0,       # "edges" mode: edges within this many degrees of an axis become exact
+    "offsets": 4,            # sub-pixel offset steps per unit tried for crispness (1 = off)
+    "centring_weight": 0.0,  # offset choice: crispness minus this × off-centring (units)
     "turdsize": 16,          # potrace: ignore specks up to this many px
     "alphamax": 0.9,         # potrace: corner threshold (0 = all corners, 1.33 = all curves)
     "opticurve": True,       # potrace: join curve segments
     "opttolerance": 0.2,     # potrace: curve-joining tolerance
-    "decimals": 2,           # coordinate precision in the SVG
+    "decimals": 3,           # coordinate precision in the SVG
 }
 
 DEFAULT_BRIEF = {

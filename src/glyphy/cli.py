@@ -48,9 +48,11 @@ def cmd_measure(args) -> None:
     print(f"Measured {baseline['icons']} reference icons on a {project.grid}-unit grid:")
     print(f"  stroke        {s['stroke']} units (p10–p90 {baseline['stroke']['p10']}–{baseline['stroke']['p90']})")
     print(f"  letter stroke {s['letter_stroke'][0]}–{s['letter_stroke'][1]} units ({baseline['letterforms']['count']} letterforms found)")
-    print(f"  live area     {s['live']} × {s['live']} units, min padding {s['pad_min']}, off-centre up to {s['centring_max']}")
+    print(f"  letter target {s['letter_stroke_target']} units, letter height {s['letter_height']}")
+    print(f"  live area     {s['live']} × {s['live']} units, min padding {s['pad_min']}")
     if baseline.get("crispness"):
         print(f"  crispness     {s['crisp_reference']} (share of solid pixels at {project.grid} px)")
+        print(f"  roughness     {s['roughness_reference']} wobbles per unit of outline (roughest reference)")
     print(f"Wrote {project.path('out') / 'baseline.json'} and reference-sheet.png; rules saved in {FILE}.")
 
 
@@ -120,7 +122,8 @@ def cmd_trace(args) -> None:
             print(f"{stem:24} ERROR {r['error']}")
             continue
         print(f"{stem:24} {'PASS' if r['ok'] else 'FAIL'}  stroke {r['raw_stroke']:.2f}→{r['stroke']:.2f} (target {r['stroke_target']:.2f})"
-              f"  box {r['box'][0]:.1f}×{r['box'][1]:.1f}  pad {r['min_pad']:.2f}  crisp {r['crisp']:.2f}")
+              f"  box {r['box'][0]:.1f}×{r['box'][1]:.1f}  pad {r['min_pad']:.2f}  crisp {r['crisp']:.2f}/{r.get('crisp_2x', 0):.2f}"
+              f"  rough {r.get('roughness', 0):.2f}{'' if r.get('roughness_ok', True) else ' (too rough)'}")
     passed = sum(1 for r in report.values() if r.get("ok"))
     print(f"{passed}/{len(report)} pass. Next: `glyphy sheet` to look at them, then `glyphy pick`.")
 
