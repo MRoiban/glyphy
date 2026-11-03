@@ -133,7 +133,7 @@ def cmd_trace(args) -> None:
         print(f"{stem:24} {'PASS' if r['ok'] else 'FAIL'}  stroke {r['raw_stroke']:.2f}→{r['stroke']:.2f} (target {r['stroke_target']:.2f})"
               f"  box {r['box'][0]:.1f}×{r['box'][1]:.1f}  pad {r['min_pad']:.2f}  crisp {r['crisp']:.2f}/{r.get('crisp_2x', 0):.2f}"
               f"  rough {r.get('roughness', 0):.2f}{'' if r.get('roughness_ok', True) else ' (too rough)'}"
-              f"  drift {r.get('drift', 0):.2f}")
+              + (f"  vector {r['vector_match']:.1%}{'' if r['hint_match'] >= 1 else f' hint {r[chr(104) + "int_match"]:.1%}'} ({r['segments']} segments)" if "vector_match" in r else f"  drift {r.get('drift', 0):.2f}"))
     passed = sum(1 for r in report.values() if r.get("ok"))
     print(f"{passed}/{len(report)} pass. Next: `glyphy sheet` to look at them, then `glyphy pick`.")
 
@@ -146,6 +146,14 @@ def cmd_check(args) -> None:
     print(json.dumps(results, indent=1))
     if not all(r.get("ok") for r in results.values()):
         sys.exit(1)
+
+
+def cmd_inspect(args) -> None:
+    from .inspect import inspect
+    project = load(args.project)
+    stems = args.stems or sorted(p.stem for p in project.path("traced").glob("*.svg"))
+    for stem in stems:
+        print(f"Wrote {inspect(project, stem)}")
 
 
 def cmd_sheet(args) -> None:
@@ -206,7 +214,7 @@ def main(argv=None) -> None:
     p.add_argument("--reference", "-r", nargs="*", help="reference icon files or folders (SVG/PNG)")
     p.add_argument("--grid", type=int, default=16, help="grid units per side of the icon canvas (default 16)")
     p.add_argument("--force", action="store_true")
-    p.add_argument("--profile", choices=["classic", "refined"], help="tracing profile (default classic; see README)")
+    p.add_argument("--profile", choices=["classic", "refined", "vector"], help="tracing profile (see README)")
     p = command("measure", cmd_measure, "Measure the reference icons and write the style rules.")
     p.add_argument("--json", action="store_true")
     p = command("add", cmd_add, "Add or update a glyph to generate.")
@@ -227,6 +235,8 @@ def main(argv=None) -> None:
     p.add_argument("files", nargs="+")
     p.add_argument("--kind", choices=["icon", "letter"], help="default: the glyph's kind, else icon")
     p.add_argument("--set", nargs="*", metavar="KEY=VALUE", help="one-off overrides for the check")
+    p = command("inspect", cmd_inspect, "Full-resolution evidence per draft: faithful trace vs clean vector, final glyph over the draft (vector method).")
+    p.add_argument("stems", nargs="*", help="draft stems, e.g. moon-1 (default: every traced draft)")
     p = command("sheet", cmd_sheet, "Draw out/sheet.png: drafts, traced glyphs at both sizes, references, numbers.")
     p = command("pick", cmd_pick, "Choose final variants: name=2 … or --best.")
     p.add_argument("choices", nargs="*", help="name=variant pairs, e.g. heading=2")

@@ -1,6 +1,6 @@
 [project]
 name = "glyphy"
-version = "0.1.0"
+version = "0.2.0"
 description = "Make icon glyphs that match a reference style: measure the style, generate drafts with an image model, trace, correct and verify them by measurement."
 readme = "README.md"
 license = { text = "MIT" }

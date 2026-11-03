@@ -27,6 +27,7 @@ DEFAULT_STYLE = {
 
 # Vectorisation knobs. Any of them can also be set per glyph in [glyphs.<name>].
 DEFAULT_TRACE = {
+    "method": "vector",      # "vector": faithful trace -> clean vector -> stroke/fit on the vector; "raster": the older pixel pipeline (classic/refined)
     "work_scale": 64,        # px per grid unit while normalising and tracing
     "threshold": 128,        # gray level below which a draft pixel counts as ink
     "speck": 0.25,           # drop ink blobs smaller than this many square units
@@ -53,15 +54,31 @@ DEFAULT_TRACE = {
     "opticurve": True,       # potrace: join curve segments
     "opttolerance": 0.2,     # potrace: curve-joining tolerance
     "decimals": 3,           # coordinate precision in the SVG
+    # "vector" method: how the faithful trace becomes clean lines and curves (lengths in grid units)
+    "corner_deg": 32.0,      # smallest turn that counts as a corner (degrees)
+    "corner_scale": 0.12,    # window over which a corner's turn is measured
+    "line_tol": 0.03,        # a run is a straight line if every point is within this
+    "min_line": 0.25,        # shortest straight run
+    "curve_tol": 0.025,      # Bézier fitting tolerance
+    "snap_deg": 2.5,         # lines within this of 0/45/90° become exact, if the drawing still agrees
+    "parallel_deg": 2.0,     # near-parallel lines become parallel, if the drawing still agrees
+    "max_extend": 0.5,       # furthest a corner may move to become an exact intersection
+    "straight_min": 0.5,     # shortest straight stretch found inside a smooth curve (rounded-rectangle sides)
+    "vector_mitre_limit": 4.0,  # stroke offset: corners sharper than this ratio are bevelled
+    "hint": False,           # move whole horizontal/vertical edges onto pixel lines (within `snap`), interpolate the rest;
+                             # off by default: it buys little crispness and moves outlines away from the drawing
+    "hint_min_len": 0.5,     # shortest edge that is hinted
 }
 
 # Named bundles of settings, written into glyphy.toml by `glyphy set --profile <name>`.
 PROFILES = {
     # The pipeline that made Typewriter's glyphs: crispest offset, corner snapping.
-    "classic": {"stroke_shape": "cross", "straighten": 4.0, "choose": "crisp"},
+    "classic": {"method": "raster", "stroke_shape": "cross", "straighten": 4.0, "choose": "crisp"},
     # Measured best overall on the example: mitred outline offsets, straighter edges, and an
     # offset/snap choice that weighs crispness at 1× and 2× against drift, uneven strokes and wobble.
-    "refined": {"stroke_shape": "mitre", "straighten": 8.0, "choose": "balanced"},
+    "refined": {"method": "raster", "stroke_shape": "mitre", "straighten": 8.0, "choose": "balanced"},
+    # Faithful trace -> clean vector -> stroke, box and pixels on the vector (the recommended pipeline).
+    "vector": {"method": "vector", "hint": False},
 }
 
 DEFAULT_BRIEF = {

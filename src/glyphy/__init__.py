@@ -8,10 +8,11 @@ Python API (the CLI is a thin layer over these):
     measure_references(project)           # learn rules from reference icons
     svg, report = trace_file(project, Path("generated/moon-1.png"), {"alphamax": 1.1})
 
-Lower-level pieces: glyphy.metrics.measure / crispness, glyphy.trace.normalise /
-to_svg / check, glyphy.raster.render_svg / load_mask.
+Lower-level pieces: glyphy.vector (faithful, vectorize, offset, hint, to_svg),
+glyphy.vtrace.trace_vector / stages, glyphy.inspect.inspect, glyphy.metrics.measure /
+crispness, glyphy.trace.normalise / to_svg / check, glyphy.raster.render_svg.
 """
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 from .brief import write_brief
 from .config import Project, apply_setting, load

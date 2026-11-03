@@ -295,6 +295,9 @@ def offset_shifts(work: int, offsets: int) -> list[int]:
 def trace_file(project: Project, path: Path, overrides: dict | None = None) -> tuple[str, dict]:
     name = glyph_name(path.stem)
     cfg = {**project.settings(name), **(overrides or {})}
+    if cfg.get("method") == "vector":
+        from .vtrace import trace_vector
+        return trace_vector(project, path, overrides)
     cfg.setdefault("kind", "icon")
     grid, work = project.grid, int(cfg["work_scale"])
     mask = ink_mask(path, cfg, grid)
