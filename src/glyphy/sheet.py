@@ -52,7 +52,7 @@ def contact_sheet(project: Project) -> str:
             draw.text((360, y + 20), f"stroke {r['raw_stroke']:.2f} -> {r['stroke']:.2f} (target {r['stroke_target']:.2f})", fill=0)
             draw.text((360, y + 38), f"box {r['box'][0]:.1f} x {r['box'][1]:.1f}  pad {r['min_pad']:.2f}  crisp {r['crisp']:.2f}", fill=0)
             if "roughness" in r:
-                draw.text((360, y + 56), f"rough {r['roughness']:.2f}  crisp 2x {r.get('crisp_2x', 0):.2f}", fill=0)
+                draw.text((360, y + 56), f"rough {r['roughness']:.2f}  crisp 2x {r.get('crisp_2x', 0):.2f}  drift {r.get('drift', 0):.2f}", fill=0)
         if replaces:
             draw.text((360, y + 74), f"replaces {replaces}", fill=100)
     path = project.path("out") / "sheet.png"

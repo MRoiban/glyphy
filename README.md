@@ -74,6 +74,31 @@ finished SVG against the style.
    the reference icon it replaces, and its numbers. Numbers say whether a glyph
    obeys the rules; the sheet says whether it reads well. Use both.
 
+## Profiles
+
+Two bundles of trace settings, measured on the example's 22 drafts:
+
+| | crisp at 16 px | crisp at 32 px | drift from draft | stroke spread | roughness | time per draft |
+|---|---|---|---|---|---|---|
+| `classic` (default) | **0.53** | 0.75 | 0.27 | 0.16 | 0.20 | ~3 s |
+| `refined` | 0.51 | 0.75 | **0.14** | **0.11** | **0.10** | ~20 s |
+
+`classic` is the pipeline that made Typewriter's glyphs: pixel stroke correction,
+corner snapping, crispest offset. `refined` offsets the traced outline with
+mitred corners instead of growing pixels (even strokes, square corners, no
+refit), straightens near-axis edges, and picks offset, snap strength and snap
+mode by a balanced score: crispness at 1× and 2× minus drift from the draft,
+uneven strokes and excess wobble. It keeps the drawing about twice as faithfully
+and half as wobbly, for a slightly softer 1× rendering. Drafts are traced in
+parallel on all cores.
+
+```sh
+glyphy init -p icons -r refs/ --profile refined   # or later:
+glyphy set -p icons --profile refined
+```
+
+A profile only writes settings into `glyphy.toml`; change any of them afterwards.
+
 ## Configuration
 
 Everything lives in `glyphy.toml`:
@@ -81,7 +106,7 @@ Everything lives in `glyphy.toml`:
 | Section | What it holds |
 |---|---|
 | `[style]` | The rules. `stroke`, `letter_stroke` (accepted range), `letter_stroke_target`, `live`, `letter_height`, `pad_min`, `crisp_reference` and `roughness_reference` are written by `glyphy measure` unless listed in `locked`. `grid`, `stroke_tolerance`, `centring_max` (0.5) and `roughness_max` (0 = report only) are yours. |
-| `[trace]` | Vectorisation knobs: `work_scale`, `threshold`, `speck` (units²), `fit`, `correct`, `stroke_shape` (`cross`/`round`), `rounds`, `stroke_epsilon`, `smooth`, `svg_as_drawn`, `snap_mode` (`corners`/`edges`), `snap`, `straighten`, `offsets`, `centring_weight`, potrace's `turdsize`, `alphamax`, `opticurve`, `opttolerance`, and `decimals`. |
+| `[trace]` | Vectorisation knobs: `work_scale`, `threshold`, `speck` (units²), `fit`, `correct`, `stroke_shape` (`cross`/`round`/`mitre`), `mitre_limit`, `rounds`, `stroke_epsilon`, `smooth`, `svg_as_drawn`, `snap_mode` (`corners`/`edges`), `snap`, `straighten`, `offsets`, `centring_weight`, `choose` (`crisp`/`balanced`) with `weight_crisp_2x`, `weight_drift`, `weight_spread`, `weight_rough`, potrace's `turdsize`, `alphamax`, `opticurve`, `opttolerance`, and `decimals`. |
 | `[brief]` | `variants`, `image_size`, `notes`, and `template` (your own brief). |
 | `[paths]` | Folder names for references, drafts, traced files, picks and reports. |
 | `[glyphs.<name>]` | `concept`, `kind` (`icon`/`letter`), `replaces`, plus any `[style]`/`[trace]` key for this glyph alone, and `box = [w, h]` or `stroke_target`. |
@@ -112,6 +137,12 @@ Alternatives that are off by default, for drafts that need them:
 | `style.roughness_max=0.24` | Fail glyphs whose outline wobbles more than this (the measured `roughness_reference` is a good value). |
 | `trace.svg_as_drawn=false` | Process SVG drafts like images (fit, correct, offsets) instead of taking them as drawn. |
 | `trace.centring_weight=0.15` | Trade crispness against centring when choosing the offset. |
+| `trace.stroke_shape="mitre"` | Correct the stroke by offsetting the traced outline (sharp corners, even in every direction). |
+| `trace.choose="balanced"` | Choose offset, snap strength and mode by the weighted score instead of crispness alone. |
+
+Every traced glyph reports `drift` (95th-percentile centreline distance from its
+draft, in units), `stroke_spread` (interquartile range of its stroke widths),
+`roughness`, and crispness at 1× and 2×.
 
 Template placeholders: `grid`, `image_size`, `unit_px`, `variants`,
 `reference_sheet`, `generated_dir`, `stroke`, `stroke_px`, `letter_stroke_min`,

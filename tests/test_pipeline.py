@@ -89,15 +89,17 @@ def test_offset_shifts():
 EXAMPLE = Path(__file__).resolve().parents[1] / "examples" / "codicon-style"
 
 
-def test_defaults_reproduce_the_example():
+def test_defaults_reproduce_the_example(tmp_path):
     """The defaults are the pipeline that made Typewriter's glyphs; the example pins them."""
-    from glyphy.trace import trace_file
-    project = load(EXAMPLE)
-    for stem in ["heading-2", "theme-light-2"]:
-        svg, report = trace_file(project, EXAMPLE / "generated" / f"{stem}.png")
-        picked = EXAMPLE / "glyphs" / f"{stem.rsplit('-', 1)[0]}.svg"
-        assert report["ok"]
-        assert not (render_svg(svg, 512) != render_svg(picked, 512)).any(), stem
+    import shutil
+    project_dir = tmp_path / "example"
+    shutil.copytree(EXAMPLE, project_dir, ignore=shutil.ignore_patterns("traced", "report.json"))
+    project = load(project_dir)
+    report = trace_all(project, only=list(project.picks.values()))
+    for name, stem in project.picks.items():
+        assert report[stem]["ok"], stem
+        traced = render_svg(project.path("traced") / f"{stem}.svg", 512)
+        assert not (traced != render_svg(EXAMPLE / "glyphs" / f"{name}.svg", 512)).any(), stem
 
 
 def test_pick_and_export(tmp_path):
@@ -146,3 +148,28 @@ def test_svg_drafts_are_taken_as_drawn(tmp_path):
     main(["set", "-p", str(project.root), "trace.svg_as_drawn=false"])
     result = trace_all(load(project.root))["box-1"]
     assert result["box"][0] > 13  # fitted (then thinned back to a 1-unit stroke)
+
+
+def test_mitre_correction_keeps_corners_square(tmp_path):
+    from glyphy.metrics import crispness
+    project = make_project(tmp_path)
+    main(["add", "-p", str(project.root), "box", "a square outline"])
+    main(["set", "-p", str(project.root), "--profile", "refined", "trace.offsets=1"])
+    # A thin draft (0.6 units): growing pixels rounds its corners, offsetting the outline must not.
+    Image.fromarray(np.where(render_svg(outline_icon(stroke=0.6), 1024), 0, 255).astype("uint8")).save(
+        project.path("generated") / "box-1.png")
+    result = trace_all(load(project.root), jobs=1)["box-1"]
+    assert result["ok"], result
+    assert abs(result["stroke"] - 1.0) <= 0.05
+    assert result["drift"] < 0.1 and result["stroke_spread"] < 0.1
+    assert crispness(project.path("traced") / "box-1.svg", GRID) > 0.9
+
+
+def test_profiles_are_plain_settings(tmp_path):
+    from glyphy.config import PROFILES
+    project = make_project(tmp_path)
+    main(["set", "-p", str(project.root), "--profile", "refined"])
+    assert all(load(project.root).trace[k] == v for k, v in PROFILES["refined"].items())
+    main(["set", "-p", str(project.root), "--profile", "classic", "trace.straighten=6"])
+    trace = load(project.root).trace
+    assert trace["choose"] == "crisp" and trace["straighten"] == 6

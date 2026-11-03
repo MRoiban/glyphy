@@ -31,6 +31,8 @@ agree, then regenerate and commit the example with the change.
 | `src/glyphy/style.py` | Reference measurement → `[style]` rules (respects `locked`), baseline and reference sheet |
 | `src/glyphy/brief.py` | The generation brief and the custom-template context |
 | `src/glyphy/trace.py` | Ink mask → fit → stroke correction → potrace → snap → offset search → check |
+| `src/glyphy/outline.py` | `stroke_shape = "mitre"`: outline offsetting with shapely, exact one-step fit |
+| `src/glyphy/fidelity.py` | Centreline drift from the draft, stroke spread |
 | `src/glyphy/sheet.py` | Contact sheet |
 | `src/glyphy/export.py` | Picking and export (TypeScript, JSON, SVG sprite) |
 | `src/glyphy/cli.py` | The `glyphy` command; every subcommand is a thin wrapper over the modules |
@@ -45,6 +47,9 @@ agree, then regenerate and commit the example with the change.
   document it in the README's configuration table.
 - New CLI behaviour must also be reachable from Python (public functions).
 - `glyphy measure` must not overwrite keys listed in `style.locked`.
+- Profiles (`config.PROFILES`) are plain bundles of settings. Judge a tracing change
+  by the profile comparison in the README: rerun both profiles on the example and
+  update the table.
 - Keep the skills in `skills/` in step with the CLI: a renamed flag or key
   must be renamed there too.
 - Comments explain why, not what.

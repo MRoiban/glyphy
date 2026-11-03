@@ -13,6 +13,7 @@ dependencies = [
   "cairosvg>=2.7",
   "potracer>=0.0.4",
   "tomli-w>=1.0",
+  "shapely>=2.0",
 ]
 
 [project.optional-dependencies]

@@ -31,6 +31,7 @@ from PIL import Image
 from scipy import ndimage
 
 from .config import Project
+from .fidelity import Centreline, drift, render as render_fidelity, stroke_spread
 from .metrics import Metrics, crispness, measure, measure_svg, roughness
 from .raster import RASTER_SUFFIXES, glyph_files, render_svg
 
@@ -118,10 +119,16 @@ def normalise(mask: np.ndarray, cfg: dict, grid: int) -> tuple[np.ndarray, float
     """Fit and correct until stroke and box both hold. Returns (mask, raw stroke, target)."""
     work, box = int(cfg["work_scale"]), box_for(cfg)
     current = fit(mask, grid, work, *box) if cfg["fit"] else mask
-    raw = measure(current, work, grid).stroke
+    m = measure(current, work, grid)
+    raw = m.stroke
     target = stroke_target(cfg, raw)
     if not cfg["correct"]:
         return current, raw, target
+    if cfg["stroke_shape"] == "mitre":
+        from .outline import exact_fit_box, offset_to_stroke
+        if cfg["fit"]:
+            current = fit(mask, grid, work, *exact_fit_box(raw, box, (m.width, m.height), target))
+        return offset_to_stroke(current, cfg, grid, target), raw, target
     for _ in range(int(cfg["rounds"])):
         current = adjust_stroke(current, grid, work, target, str(cfg["stroke_shape"]))
         m = measure(current, work, grid)
@@ -302,40 +309,85 @@ def trace_file(project: Project, path: Path, overrides: dict | None = None) -> t
         normal = smooth(normal, float(cfg["smooth"]), work)
     offsets = 1 if as_drawn else max(1, int(cfg["offsets"]))
     shifts = offset_shifts(work, offsets)
+    centreline = Centreline.of(fit(mask, grid, 32, *box_for(cfg)))
+    balanced = cfg["choose"] == "balanced" and not as_drawn
+    snap = float(cfg["snap"])
+    # "balanced" also searches snap strength and mode, since snapping trades crispness for faithfulness.
+    variants = ([("corners", 0.0)] + [(mode, s) for mode in ("corners", "edges") for s in sorted({snap / 2, snap}) if s > 0]
+                if balanced else [(cfg["snap_mode"], snap)])
     best = None
-    for dy in shifts:
-        for dx in shifts:
-            shifted = np.roll(normal, (dy, dx), axis=(0, 1))
-            svg = to_svg(shifted, cfg, grid)
-            m = measure_svg(svg, grid)
-            if m is None:
-                continue
-            result = {**check(m, cfg, target), "crisp": round(crispness(svg, grid), 2)}
-            # Prefer crisp edges, but not at any cost in centring.
-            score = (result["ok"], result["crisp"] - float(cfg["centring_weight"]) * result["centring"])
-            if best is None or score > best[0]:
-                best = (score, svg, m)
+    for mode, s in variants:
+        c = {**cfg, "snap_mode": mode, "snap": s}
+        for dy in shifts:
+            for dx in shifts:
+                svg = to_svg(np.roll(normal, (dy, dx), axis=(0, 1)), c, grid)
+                m = measure_svg(svg, grid)
+                if m is None:
+                    continue
+                result = check(m, c, target)
+                crisp = crispness(svg, grid)
+                if balanced:
+                    value = choice_value(svg, grid, c, centreline, crisp)
+                else:
+                    # Prefer crisp edges, but not at any cost in centring. Crispness is compared
+                    # at two decimals, so near-ties go to the first (least shifted) offset.
+                    value = round(crisp, 2) - float(cfg["centring_weight"]) * result["centring"]
+                score = (result["ok"], value)
+                if best is None or score > best[0]:
+                    best = (score, svg, m, c, (dy, dx))
     if best is None:
         return "", {"glyph": name, "ok": False, "error": "tracing produced no ink"}
-    # Roughness hardly depends on the offset, so it is measured once, on the winner.
-    _, svg, m = best
-    result = {**check(m, cfg, target, roughness(svg, grid)), **_crisp(svg, grid)}
+    _, svg, m, c, (dy, dx) = best
+    rendered = render_fidelity(svg, grid)
+    mean_drift, drift95 = drift(centreline, rendered)
+    result = {**check(m, c, target, roughness(svg, grid)), **_crisp(svg, grid),
+              "drift": round(drift95, 3), "drift_mean": round(mean_drift, 3), "stroke_spread": round(stroke_spread(rendered), 3),
+              "snap": c["snap"], "snap_mode": c["snap_mode"], "offset": [round(dx / work, 3), round(dy / work, 3)]}
     return svg, {"glyph": name, "raw_stroke": round(raw, 3), **result, "bytes": len(svg)}
 
 
-def trace_all(project: Project, only: list[str] | None = None, overrides: dict | None = None) -> dict:
+def choice_value(svg: str, grid: int, cfg: dict, centreline: Centreline, crisp: float | None = None) -> float:
+    """The "balanced" score: crispness at 1× and 2×, minus drift from the draft, uneven
+    strokes and wobble beyond the roughest reference. Weights are `weight_*` settings."""
+    rendered = render_fidelity(svg, grid)
+    crisp = crispness(svg, grid) if crisp is None else crisp
+    excess = max(0.0, roughness(svg, grid) - float(cfg["roughness_reference"]))
+    return (crisp + float(cfg["weight_crisp_2x"]) * crispness(svg, grid, 2)
+            - float(cfg["weight_drift"]) * drift(centreline, rendered)[1]
+            - float(cfg["weight_spread"]) * stroke_spread(rendered)
+            - float(cfg["weight_rough"]) * excess)
+
+
+def _trace_one(job):
+    project, path, overrides = job
+    return path, *trace_file(project, path, overrides)
+
+
+def trace_all(project: Project, only: list[str] | None = None, overrides: dict | None = None,
+              jobs: int | None = None) -> dict:
+    """Trace every draft (or `only` these glyphs/stems), `jobs` drafts at a time (default: all CPU cores)."""
+    import os
+    from concurrent.futures import ProcessPoolExecutor
+
     src, dst = project.path("generated"), project.path("traced")
     dst.mkdir(parents=True, exist_ok=True)
     out = project.path("out")
     out.mkdir(parents=True, exist_ok=True)
     report_file = out / "report.json"
     report = json.loads(report_file.read_text()) if report_file.exists() else {}
-    for path in glyph_files(src):
-        if only and glyph_name(path.stem) not in only and path.stem not in only:
-            continue
-        svg, result = trace_file(project, path, overrides)
+    paths = [p for p in glyph_files(src) if not only or glyph_name(p.stem) in only or p.stem in only]
+    work = [(project, p, overrides) for p in paths]
+    jobs = max(1, min(jobs or os.cpu_count() or 1, len(work)))
+    if jobs == 1:
+        results = map(_trace_one, work)
+    else:
+        pool = ProcessPoolExecutor(jobs)
+        results = pool.map(_trace_one, work)
+    for path, svg, result in results:
         if svg:
             (dst / f"{path.stem}.svg").write_text(svg)
         report[path.stem] = result
+    if jobs > 1:
+        pool.shutdown()
     report_file.write_text(json.dumps(report, indent=1))
     return report

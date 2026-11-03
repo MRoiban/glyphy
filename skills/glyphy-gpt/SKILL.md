@@ -78,5 +78,8 @@ If the user gives no references, ask for them. Do not invent a style.
   compare it with `style.roughness_reference`.
 - Keep concepts simple enough for the native size: at 16 px a glyph has about
   14 pixels across. Prefer one strong shape over several small ones.
+- For the most faithful, cleanest glyphs use `glyphy set -p icons --profile refined`
+  (about 20 s per draft instead of 3): drift from the draft halves and outlines
+  wobble half as much, for slightly softer edges at 1×. `trace` reports `drift`.
 - `glyphy config -p icons --glyph <name>` shows exactly what tracing will use.
 - One-off experiments: `glyphy trace --only <name> --set trace.offsets=8` (not saved).

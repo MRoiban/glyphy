@@ -129,6 +129,13 @@ and sits comfortably beside the references. Common problems and remedies:
 The defaults are tuned; change one glyph's settings to fix a defect you can name,
 not the global ones.
 
+For the best final SVGs, switch the project to the `refined` profile
+(`glyphy set -p icons --profile refined`): outlines are offset with mitred
+corners instead of growing pixels, and each glyph's offset and snapping are
+chosen by crispness at 1× and 2× balanced against `drift` from the draft, stroke
+evenness and wobble. It is slower (about 20 s per draft, run in parallel) and a
+little softer at 1×; `classic` (the default) maximises 1× crispness.
+
 Change one thing at a time and re-run `glyphy trace -p icons --only <name>`.
 `glyphy config -p icons --glyph <name>` shows the exact settings in effect.
 

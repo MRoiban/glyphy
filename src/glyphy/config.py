@@ -32,7 +32,8 @@ DEFAULT_TRACE = {
     "speck": 0.25,           # drop ink blobs smaller than this many square units
     "fit": True,             # scale and centre the draft into the target box
     "correct": True,         # erode/dilate towards the target stroke
-    "stroke_shape": "cross", # "cross": 3×3 cross steps; "round": exact distance (rounds grown corners)
+    "stroke_shape": "cross", # "cross": 3×3 cross steps; "round": exact distance; "mitre": offset the outline
+    "mitre_limit": 2.0,      # "mitre": how far sharp corners may extend when offsetting (× the offset)
     "rounds": 5,             # fit/correct iterations
     "stroke_epsilon": 0.04,  # stop correcting within this many units of the target
     "smooth": 0.0,           # blur radius (units) to iron out noisy drafts before tracing (0 = off)
@@ -41,12 +42,26 @@ DEFAULT_TRACE = {
     "snap": 0.3,             # move points within this many units of a whole pixel onto it (0 = off)
     "straighten": 4.0,       # "edges" mode: edges within this many degrees of an axis become exact
     "offsets": 4,            # sub-pixel offset steps per unit tried for crispness (1 = off)
-    "centring_weight": 0.0,  # offset choice: crispness minus this × off-centring (units)
+    "centring_weight": 0.0,  # "crisp" choice: crispness minus this × off-centring (units)
+    "choose": "crisp",       # how to pick among offsets: "crisp" (crispest passing) or "balanced" (see weight_*)
+    "weight_crisp_2x": 1.0,  # "balanced": + crispness at 2× (crispness at 1× counts 1)
+    "weight_drift": 0.5,     # "balanced": − 95th-percentile centreline drift from the draft (units)
+    "weight_spread": 1.0,    # "balanced": − stroke-width spread (units)
+    "weight_rough": 1.0,     # "balanced": − roughness above style.roughness_reference
     "turdsize": 16,          # potrace: ignore specks up to this many px
     "alphamax": 0.9,         # potrace: corner threshold (0 = all corners, 1.33 = all curves)
     "opticurve": True,       # potrace: join curve segments
     "opttolerance": 0.2,     # potrace: curve-joining tolerance
     "decimals": 3,           # coordinate precision in the SVG
+}
+
+# Named bundles of settings, written into glyphy.toml by `glyphy set --profile <name>`.
+PROFILES = {
+    # The pipeline that made Typewriter's glyphs: crispest offset, corner snapping.
+    "classic": {"stroke_shape": "cross", "straighten": 4.0, "choose": "crisp"},
+    # Measured best overall on the example: mitred outline offsets, straighter edges, and an
+    # offset/snap choice that weighs crispness at 1× and 2× against drift, uneven strokes and wobble.
+    "refined": {"stroke_shape": "mitre", "straighten": 8.0, "choose": "balanced"},
 }
 
 DEFAULT_BRIEF = {

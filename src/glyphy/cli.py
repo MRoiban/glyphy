@@ -19,6 +19,9 @@ def cmd_init(args) -> None:
         raise SystemExit(f"{root / FILE} already exists (use --force to overwrite).")
     project = Project(root=root)
     project.style["grid"] = args.grid
+    if args.profile:
+        from .config import PROFILES
+        project.trace.update(PROFILES[args.profile])
     for key in ["reference", "generated", "traced", "picked", "out"]:
         project.path(key).mkdir(parents=True, exist_ok=True)
     copied = 0
@@ -78,7 +81,13 @@ def overrides(project: Project, assignments: list[str] | None) -> dict:
 
 
 def cmd_set(args) -> None:
+    from .config import PROFILES
     project = load(args.project)
+    if args.profile:
+        if args.profile not in PROFILES:
+            raise SystemExit(f"Unknown profile {args.profile!r}; choose from {', '.join(PROFILES)}.")
+        project.trace.update(PROFILES[args.profile])
+        print(f"profile {args.profile}: " + ", ".join(f"trace.{k} = {v!r}" for k, v in PROFILES[args.profile].items()))
     for assignment in args.assignments:
         key, value = apply_setting(project, assignment)
         bare = key.split(".")[-1]
@@ -113,7 +122,7 @@ def cmd_trace(args) -> None:
     extra = overrides(project, args.set)
     if args.offsets is not None:
         extra["offsets"] = args.offsets
-    report = trace_all(project, args.only, extra)
+    report = trace_all(project, args.only, extra, args.jobs)
     if args.json:
         print(json.dumps(report, indent=1))
         return
@@ -123,7 +132,8 @@ def cmd_trace(args) -> None:
             continue
         print(f"{stem:24} {'PASS' if r['ok'] else 'FAIL'}  stroke {r['raw_stroke']:.2f}→{r['stroke']:.2f} (target {r['stroke_target']:.2f})"
               f"  box {r['box'][0]:.1f}×{r['box'][1]:.1f}  pad {r['min_pad']:.2f}  crisp {r['crisp']:.2f}/{r.get('crisp_2x', 0):.2f}"
-              f"  rough {r.get('roughness', 0):.2f}{'' if r.get('roughness_ok', True) else ' (too rough)'}")
+              f"  rough {r.get('roughness', 0):.2f}{'' if r.get('roughness_ok', True) else ' (too rough)'}"
+              f"  drift {r.get('drift', 0):.2f}")
     passed = sum(1 for r in report.values() if r.get("ok"))
     print(f"{passed}/{len(report)} pass. Next: `glyphy sheet` to look at them, then `glyphy pick`.")
 
@@ -196,6 +206,7 @@ def main(argv=None) -> None:
     p.add_argument("--reference", "-r", nargs="*", help="reference icon files or folders (SVG/PNG)")
     p.add_argument("--grid", type=int, default=16, help="grid units per side of the icon canvas (default 16)")
     p.add_argument("--force", action="store_true")
+    p.add_argument("--profile", choices=["classic", "refined"], help="tracing profile (default classic; see README)")
     p = command("measure", cmd_measure, "Measure the reference icons and write the style rules.")
     p.add_argument("--json", action="store_true")
     p = command("add", cmd_add, "Add or update a glyph to generate.")
@@ -209,6 +220,7 @@ def main(argv=None) -> None:
     p = command("trace", cmd_trace, "Vectorise drafts, correct them to the style and measure them.")
     p.add_argument("--only", nargs="*", help="glyph names (or stems) to trace")
     p.add_argument("--offsets", type=int, help="shorthand for --set trace.offsets=N")
+    p.add_argument("--jobs", "-j", type=int, help="drafts traced in parallel (default: all CPU cores)")
     p.add_argument("--set", nargs="*", metavar="KEY=VALUE", help="one-off overrides, e.g. trace.alphamax=1.1 style.stroke=1.5")
     p.add_argument("--json", action="store_true")
     p = command("check", cmd_check, "Measure finished SVGs (e.g. hand-drawn) against the style. Exit 1 if any fails.")
@@ -224,7 +236,8 @@ def main(argv=None) -> None:
     p.add_argument("--output", "-o", required=True)
     command("status", cmd_status, "Show progress and the next step.")
     p = command("set", cmd_set, "Change any setting: style.stroke=1.5, trace.alphamax=1.1, glyphs.heading.kind=letter.")
-    p.add_argument("assignments", nargs="+", metavar="KEY=VALUE")
+    p.add_argument("assignments", nargs="*", metavar="KEY=VALUE")
+    p.add_argument("--profile", help="apply a named bundle of trace settings first: classic or refined")
     p.add_argument("--lock", action="store_true", help="also pin style keys so `glyphy measure` keeps them")
     p = command("config", cmd_config, "Print the project settings, or the effective settings for one glyph.")
     p.add_argument("--glyph", help="show style + trace + this glyph's overrides, as tracing will use them")
