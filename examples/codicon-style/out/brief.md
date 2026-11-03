@@ -9,7 +9,7 @@ Study this sheet of reference icons first and pass it to the image tool as a ref
 out/reference-sheet.png
 
 ## Measured style rules (16×16 grid, 1024×1024 image, so 1 unit = 64 px)
-- Uniform stroke: 1.0 units = 64 px. Letterforms may range 0.95–1.4 units. No thick/thin contrast.
+- Uniform stroke: 1.0 units = 64 px. Letterforms may range 0.95–1.45 units. No thick/thin contrast.
 - Icons fit a 14.0×14.0 unit live area (896 px), centred; letterforms are about 11.91 units tall.
 - Keep at least 0.75 units (48 px) of empty margin on every side.
 - Match the references' stroke ends, corner treatment, proportions and level of detail.

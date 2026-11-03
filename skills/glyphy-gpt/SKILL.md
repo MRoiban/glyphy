@@ -68,8 +68,14 @@ If the user gives no references, ask for them. Do not invent a style.
 - Crispness below the reference value (`style.crisp_reference`) means edges
   fall between pixels. Straight shapes should reach it; curves and diagonals
   sit lower, as in the references.
-- Letterforms keep their weight inside `style.letter_stroke`. To force pixel-
-  crisp letters, set `glyphs.<name>.stroke_target` to the outline stroke.
+- Letterforms fit a `letter_height` square and are corrected towards
+  `style.letter_stroke_target`, the references' typical letter weight. To force
+  pixel-crisp letters, set `glyphs.<name>.stroke_target` to the outline stroke.
+- The defaults are tuned on real image-model drafts. Change a knob only to fix a
+  defect you can name, and only for that glyph: a wobbly outline from a noisy
+  draft → `glyphs.<name>.smooth=0.08`; teeth on a curve → `glyphs.<name>.snap_mode="edges"`;
+  lumpy curves → raise `alphamax`. `trace` reports each glyph's `rough` (wobble);
+  compare it with `style.roughness_reference`.
 - Keep concepts simple enough for the native size: at 16 px a glyph has about
   14 pixels across. Prefer one strong shape over several small ones.
 - `glyphy config -p icons --glyph <name>` shows exactly what tracing will use.

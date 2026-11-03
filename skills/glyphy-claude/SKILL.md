@@ -42,11 +42,16 @@ Read the rules it prints and sanity-check them against the reference sheet
 | Rule | Meaning | Typical (Codicons) |
 |---|---|---|
 | `stroke` | outline stroke width, grid units | 1.0 |
-| `letter_stroke` | accepted range for letterforms | 0.95–1.4 |
+| `letter_stroke` | accepted range for letterforms | 0.95–1.45 |
+| `letter_stroke_target` | weight letterforms are corrected towards | 1.2 |
 | `live` | largest side of an icon's ink | 14 of 16 |
 | `pad_min` | smallest margin allowed | 0.75 |
-| `centring_max` | allowed off-centring (references trade it for pixel alignment) | ≤ 2 |
+| `letter_height` | letterforms fit a square this tall (whole units) | 12 |
 | `crisp_reference` | share of solid pixels at native size | 0.6 |
+| `roughness_reference` | outline wobble of the roughest reference (report only) | 0.24 |
+
+`centring_max` (0.5) and `roughness_max` (0 = report only) are rules you set,
+not measured.
 
 If a value contradicts what you see (for example the set is clearly 1-unit
 line icons but `stroke` came out 1.6 because several references are filled),
@@ -67,7 +72,8 @@ measured rules: sizes in pixels, output format, file names, the glyph list.
 ## 4. Produce drafts
 
 You cannot generate raster images yourself, so use one of these routes. Prefer
-the first when it is available.
+the first: the default pipeline is tuned on image-model drafts, and it is what
+made the example glyphs.
 
 **A. Delegate to an image-capable agent or tool.** If you can start a
 sub-agent on a model with image generation (for example GPT-6 on Codex) or the
@@ -86,8 +92,9 @@ treats SVG drafts exactly like images. For each glyph, write
   pixels: a horizontal 1-unit line belongs at `y = n + 0.5`.
 - Stay inside the live area (`live` × `live`, centred) and keep `pad_min` margin.
 - Keep it to what reads at native size: about `grid − 2` pixels across.
-Then trace them like any draft. Glyphy converts strokes into the filled-path
-form icon sets use and checks them. For SVGs that are already final, use
+Then trace them like any draft. They are taken as drawn (`trace.svg_as_drawn`):
+Glyphy converts strokes into the filled-path form icon sets use and measures
+them, without refitting or correcting. For SVGs that are already final, use
 `glyphy check -p icons <files>` instead (it exits 1 if any fails).
 
 ## 5. Trace, measure, review
@@ -112,8 +119,15 @@ and sits comfortably beside the references. Common problems and remedies:
   than over-correct.
 - **Too small or oddly placed**: per-glyph `box=[w,h]` sets the target box;
   `fit=false` keeps the draft's own geometry.
-- **Lumpy curves**: lower snapping for that glyph (`glyphs.<name>.snap=0`) or
-  raise `alphamax` for smoother potrace curves.
+- **Lumpy curves or teeth on curves**: `glyphs.<name>.snap_mode="edges"` snaps
+  only straight axis edges; `glyphs.<name>.snap=0` turns snapping off; a higher
+  `alphamax` gives smoother potrace curves.
+- **Wobbly outline from a noisy draft** (high `rough` in the report, compared
+  with `style.roughness_reference`): `glyphs.<name>.smooth=0.08` irons it out
+  before tracing, or regenerate the draft.
+
+The defaults are tuned; change one glyph's settings to fix a defect you can name,
+not the global ones.
 
 Change one thing at a time and re-run `glyphy trace -p icons --only <name>`.
 `glyphy config -p icons --glyph <name>` shows the exact settings in effect.

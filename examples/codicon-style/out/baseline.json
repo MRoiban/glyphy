@@ -31,6 +31,12 @@
   "p10": 0.317,
   "p90": 0.952
  },
+ "roughness": {
+  "median": 0.052,
+  "p10": 0.0,
+  "p90": 0.146,
+  "max": 0.231
+ },
  "letterforms": {
   "count": 3,
   "stroke": {
@@ -47,10 +53,11 @@
   "letter_height": 11.91,
   "letter_stroke": [
    0.95,
-   1.4
+   1.45
   ],
+  "letter_stroke_target": 1.2,
   "crisp_reference": 0.6,
-  "centring_max": 2.0
+  "roughness_reference": 0.24
  },
  "icons_measured": {
   "bell": {
@@ -63,7 +70,8 @@
    "pad_bottom": 1.0,
    "coverage": 0.166,
    "components": 1,
-   "holes": 2
+   "holes": 2,
+   "roughness": 0.048
   },
   "bold": {
    "stroke": 1.202,
@@ -75,7 +83,8 @@
    "pad_bottom": 3.0,
    "coverage": 0.147,
    "components": 1,
-   "holes": 2
+   "holes": 2,
+   "roughness": 0.017
   },
   "cloud-upload": {
    "stroke": 1.0,
@@ -87,7 +96,8 @@
    "pad_bottom": 2.031,
    "coverage": 0.171,
    "components": 2,
-   "holes": 0
+   "holes": 0,
+   "roughness": 0.067
   },
   "code": {
    "stroke": 1.017,
@@ -99,7 +109,8 @@
    "pad_bottom": 2.562,
    "coverage": 0.11,
    "components": 3,
-   "holes": 0
+   "holes": 0,
+   "roughness": 0.065
   },
   "collapse-all": {
    "stroke": 1.0,
@@ -111,7 +122,8 @@
    "pad_bottom": 2.0,
    "coverage": 0.213,
    "components": 2,
-   "holes": 2
+   "holes": 2,
+   "roughness": 0.054
   },
   "color-mode": {
    "stroke": 1.008,
@@ -123,7 +135,8 @@
    "pad_bottom": 1.0,
    "coverage": 0.38,
    "components": 1,
-   "holes": 1
+   "holes": 1,
+   "roughness": 0.0
   },
   "comment": {
    "stroke": 1.0,
@@ -135,7 +148,8 @@
    "pad_bottom": 1.156,
    "coverage": 0.184,
    "components": 1,
-   "holes": 1
+   "holes": 1,
+   "roughness": 0.064
   },
   "eye": {
    "stroke": 1.0,
@@ -147,7 +161,8 @@
    "pad_bottom": 4.656,
    "coverage": 0.12,
    "components": 2,
-   "holes": 1
+   "holes": 1,
+   "roughness": 0.0
   },
   "file-code": {
    "stroke": 1.0,
@@ -159,7 +174,8 @@
    "pad_bottom": 1.0,
    "coverage": 0.248,
    "components": 3,
-   "holes": 2
+   "holes": 2,
+   "roughness": 0.047
   },
   "file-pdf": {
    "stroke": 1.0,
@@ -171,7 +187,8 @@
    "pad_bottom": 1.0,
    "coverage": 0.283,
    "components": 5,
-   "holes": 4
+   "holes": 4,
+   "roughness": 0.05
   },
   "file": {
    "stroke": 1.0,
@@ -183,7 +200,8 @@
    "pad_bottom": 1.0,
    "coverage": 0.205,
    "components": 1,
-   "holes": 2
+   "holes": 2,
+   "roughness": 0.019
   },
   "folder": {
    "stroke": 1.0,
@@ -195,7 +213,8 @@
    "pad_bottom": 2.0,
    "coverage": 0.231,
    "components": 1,
-   "holes": 2
+   "holes": 2,
+   "roughness": 0.06
   },
   "gear": {
    "stroke": 0.978,
@@ -207,7 +226,8 @@
    "pad_bottom": 1.0,
    "coverage": 0.267,
    "components": 2,
-   "holes": 2
+   "holes": 2,
+   "roughness": 0.221
   },
   "italic": {
    "stroke": 1.443,
@@ -219,7 +239,8 @@
    "pad_bottom": 2.094,
    "coverage": 0.085,
    "components": 1,
-   "holes": 0
+   "holes": 0,
+   "roughness": 0.103
   },
   "library": {
    "stroke": 1.0,
@@ -231,7 +252,8 @@
    "pad_bottom": 2.0,
    "coverage": 0.299,
    "components": 3,
-   "holes": 3
+   "holes": 3,
+   "roughness": 0.0
   },
   "lightbulb": {
    "stroke": 1.0,
@@ -243,7 +265,8 @@
    "pad_bottom": 2.0,
    "coverage": 0.296,
    "components": 1,
-   "holes": 1
+   "holes": 1,
+   "roughness": 0.0
   },
   "link": {
    "stroke": 1.0,
@@ -255,7 +278,8 @@
    "pad_bottom": 3.0,
    "coverage": 0.17,
    "components": 2,
-   "holes": 0
+   "holes": 0,
+   "roughness": 0.0
   },
   "list-ordered": {
    "stroke": 1.0,
@@ -267,7 +291,8 @@
    "pad_bottom": 3.0,
    "coverage": 0.159,
    "components": 6,
-   "holes": 0
+   "holes": 0,
+   "roughness": 0.121
   },
   "list-unordered": {
    "stroke": 1.0,
@@ -279,7 +304,8 @@
    "pad_bottom": 3.0,
    "coverage": 0.188,
    "components": 8,
-   "holes": 0
+   "holes": 0,
+   "roughness": 0.0
   },
   "new-file": {
    "stroke": 1.0,
@@ -291,7 +317,8 @@
    "pad_bottom": 0.0,
    "coverage": 0.21,
    "components": 2,
-   "holes": 2
+   "holes": 2,
+   "roughness": 0.075
   },
   "new-folder": {
    "stroke": 1.0,
@@ -303,7 +330,8 @@
    "pad_bottom": 0.0,
    "coverage": 0.232,
    "components": 2,
-   "holes": 2
+   "holes": 2,
+   "roughness": 0.11
   },
   "search": {
    "stroke": 1.0,
@@ -315,7 +343,8 @@
    "pad_bottom": 0.094,
    "coverage": 0.155,
    "components": 1,
-   "holes": 1
+   "holes": 1,
+   "roughness": 0.025
   },
   "symbol-keyword": {
    "stroke": 1.0,
@@ -327,7 +356,8 @@
    "pad_bottom": 2.0,
    "coverage": 0.211,
    "components": 7,
-   "holes": 1
+   "holes": 1,
+   "roughness": 0.0
   },
   "symbol-namespace": {
    "stroke": 0.952,
@@ -339,7 +369,8 @@
    "pad_bottom": 2.0,
    "coverage": 0.11,
    "components": 2,
-   "holes": 0
+   "holes": 0,
+   "roughness": 0.161
   },
   "symbol-numeric": {
    "stroke": 1.0,
@@ -351,7 +382,8 @@
    "pad_bottom": 1.0,
    "coverage": 0.203,
    "components": 1,
-   "holes": 1
+   "holes": 1,
+   "roughness": 0.144
   },
   "symbol-operator": {
    "stroke": 1.0,
@@ -363,7 +395,8 @@
    "pad_bottom": 1.0,
    "coverage": 0.168,
    "components": 6,
-   "holes": 2
+   "holes": 2,
+   "roughness": 0.142
   },
   "target": {
    "stroke": 1.0,
@@ -375,7 +408,8 @@
    "pad_bottom": 1.0,
    "coverage": 0.258,
    "components": 3,
-   "holes": 2
+   "holes": 2,
+   "roughness": 0.0
   },
   "wand": {
    "stroke": 1.017,
@@ -387,7 +421,8 @@
    "pad_bottom": 1.5,
    "coverage": 0.169,
    "components": 4,
-   "holes": 2
+   "holes": 2,
+   "roughness": 0.231
   },
   "zoom-in": {
    "stroke": 1.01,
@@ -399,7 +434,8 @@
    "pad_bottom": 1.0,
    "coverage": 0.184,
    "components": 2,
-   "holes": 1
+   "holes": 1,
+   "roughness": 0.095
   },
   "zoom-out": {
    "stroke": 1.017,
@@ -411,7 +447,8 @@
    "pad_bottom": 1.0,
    "coverage": 0.168,
    "components": 2,
-   "holes": 1
+   "holes": 1,
+   "roughness": 0.023
   }
  }
 }

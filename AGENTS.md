@@ -14,17 +14,19 @@ uv venv && uv pip install -e '.[test]'
 .venv/bin/glyphy trace -p examples/codicon-style && .venv/bin/glyphy sheet -p examples/codicon-style
 ```
 
-After changing measurement or tracing, re-run the example and look at
-`examples/codicon-style/out/sheet.png`: all 11 glyphs should still pass, and
-the native-size column should still look crisp. Commit the regenerated example
-outputs together with the change.
+The default settings are the pipeline that made Typewriter's glyphs, and the
+example pins them: `test_defaults_reproduce_the_example` retraces drafts and
+expects the committed glyphs pixel for pixel. A new idea goes in behind a
+setting that is off by default; change a default only when the example's sheet
+(`examples/codicon-style/out/sheet.png`) is visibly better and the numbers
+agree, then regenerate and commit the example with the change.
 
 ## Code map
 
 | Path | What it owns |
 |---|---|
 | `src/glyphy/raster.py` | SVG/PNG → boolean ink masks (Cairo), file discovery |
-| `src/glyphy/metrics.py` | `Metrics` and `measure`: stroke (skeleton × distance transform), box, padding, centring, crispness |
+| `src/glyphy/metrics.py` | `Metrics` and `measure`: stroke (skeleton × distance transform), box, padding, centring; `crispness`, `roughness` |
 | `src/glyphy/config.py` | Defaults, `glyphy.toml` load/save, `Project.settings(glyph)` merging, `apply_setting` |
 | `src/glyphy/style.py` | Reference measurement → `[style]` rules (respects `locked`), baseline and reference sheet |
 | `src/glyphy/brief.py` | The generation brief and the custom-template context |

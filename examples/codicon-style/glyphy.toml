@@ -8,31 +8,39 @@ stroke = 1.0
 stroke_tolerance = 0.12
 letter_stroke = [
     0.95,
-    1.4,
+    1.45,
 ]
+letter_stroke_target = 1.2
 live = 14.0
 letter_height = 11.91
 pad_min = 0.75
-centring_max = 2.0
+centring_max = 0.5
 crisp_reference = 0.6
+roughness_reference = 0.24
+roughness_max = 0.0
 locked = []
 
 [trace]
 work_scale = 64
 threshold = 128
-speck = 0.0005
+speck = 0.25
 fit = true
 correct = true
+stroke_shape = "cross"
 rounds = 5
 stroke_epsilon = 0.04
+smooth = 0.0
+svg_as_drawn = true
+snap_mode = "corners"
 snap = 0.3
+straighten = 4.0
 offsets = 4
-centring_weight = 0.15
+centring_weight = 0.0
 turdsize = 16
 alphamax = 0.9
 opticurve = true
 opttolerance = 0.2
-decimals = 2
+decimals = 3
 
 [paths]
 reference = "reference"
@@ -51,7 +59,6 @@ template = ""
 concept = "a geometric sans-serif capital \"H\""
 kind = "letter"
 replaces = "symbol-keyword"
-stroke_target = 1.0
 
 [glyphs.math-inline]
 concept = "an italic lowercase \"x\" with a small superscript \"2\""
@@ -104,14 +111,14 @@ kind = "icon"
 replaces = "file-code"
 
 [picks]
-comment-toggle = "comment-toggle-1"
-dark-pages = "dark-pages-1"
-follow-cursor = "follow-cursor-1"
-heading = "heading-1"
-main-file = "main-file-1"
-math-display = "math-display-1"
+heading = "heading-2"
 math-inline = "math-inline-1"
+math-display = "math-display-2"
+comment-toggle = "comment-toggle-2"
+follow-cursor = "follow-cursor-2"
 section = "section-1"
-theme-dark = "theme-dark-1"
-theme-light = "theme-light-1"
-typst-file = "typst-file-1"
+theme-light = "theme-light-2"
+theme-dark = "theme-dark-2"
+dark-pages = "dark-pages-1"
+main-file = "main-file-2"
+typst-file = "typst-file-2"

@@ -46,7 +46,9 @@ glyphy status -p my-icons                              # where am I, what's next
 
 Drafts can also be SVGs (for example drawn by hand or by a model that writes
 SVG): put `<name>-<n>.svg` in `generated/` and they go through the same steps.
-`glyphy check file.svg` measures any finished SVG against the style.
+They are taken as drawn (`trace.svg_as_drawn`): turned into filled outlines and
+measured, but not refitted or corrected. `glyphy check file.svg` measures any
+finished SVG against the style.
 
 ## How it works
 
@@ -61,12 +63,13 @@ SVG): put `<name>-<n>.svg` in `generated/` and they go through the same steps.
    the output format (pure black on pure white, one glyph per image, file
    names) and the glyph list. Pass `out/reference-sheet.png` to the image
    model as a style reference when it accepts images.
-3. **Trace** (`glyphy trace`). Ink extraction; fit into the live area (or the
-   letter height); stroke correction by erosion/dilation, iterated with
+3. **Trace** (`glyphy trace`). Ink extraction at the draft's full resolution;
+   fit into the live area (letterforms: a square as tall as the references'
+   letters); stroke correction by erosion/dilation towards the measured stroke
+   (letterforms: the references' typical letter stroke), iterated with
    refitting until both hold; potrace; snapping of straight corners to whole
-   pixels; a search over sub-pixel offsets that keeps the crispest passing,
-   best-centred result; then re-measurement. Letterforms keep their own weight
-   inside the measured letter range.
+   pixels; a search over sub-pixel offsets that keeps the crispest centred
+   result that passes; then re-measurement, including outline roughness.
 4. **Review** (`glyphy sheet`). Draft, traced glyph large and at native size,
    the reference icon it replaces, and its numbers. Numbers say whether a glyph
    obeys the rules; the sheet says whether it reads well. Use both.
@@ -77,8 +80,8 @@ Everything lives in `glyphy.toml`:
 
 | Section | What it holds |
 |---|---|
-| `[style]` | The rules. `grid` (units per side) is yours; `stroke`, `letter_stroke`, `live`, `letter_height`, `pad_min`, `centring_max`, `crisp_reference` are written by `glyphy measure` unless listed in `locked`. `stroke_tolerance` is yours. |
-| `[trace]` | Vectorisation knobs: `work_scale`, `threshold`, `speck`, `fit`, `correct`, `rounds`, `stroke_epsilon`, `snap`, `offsets`, `centring_weight`, potrace's `turdsize`, `alphamax`, `opticurve`, `opttolerance`, and `decimals`. |
+| `[style]` | The rules. `stroke`, `letter_stroke` (accepted range), `letter_stroke_target`, `live`, `letter_height`, `pad_min`, `crisp_reference` and `roughness_reference` are written by `glyphy measure` unless listed in `locked`. `grid`, `stroke_tolerance`, `centring_max` (0.5) and `roughness_max` (0 = report only) are yours. |
+| `[trace]` | Vectorisation knobs: `work_scale`, `threshold`, `speck` (units²), `fit`, `correct`, `stroke_shape` (`cross`/`round`), `rounds`, `stroke_epsilon`, `smooth`, `svg_as_drawn`, `snap_mode` (`corners`/`edges`), `snap`, `straighten`, `offsets`, `centring_weight`, potrace's `turdsize`, `alphamax`, `opticurve`, `opttolerance`, and `decimals`. |
 | `[brief]` | `variants`, `image_size`, `notes`, and `template` (your own brief). |
 | `[paths]` | Folder names for references, drafts, traced files, picks and reports. |
 | `[glyphs.<name>]` | `concept`, `kind` (`icon`/`letter`), `replaces`, plus any `[style]`/`[trace]` key for this glyph alone, and `box = [w, h]` or `stroke_target`. |
@@ -86,7 +89,8 @@ Everything lives in `glyphy.toml`:
 
 ## Control for power users
 
-The defaults are a starting point, never a cage:
+The defaults are the pipeline that made the example's glyphs (and Typewriter's),
+tuned on real image-model drafts. They are a starting point, never a cage:
 
 ```sh
 glyphy set style.stroke=1.5 --lock            # pin a rule; `measure` will keep it
@@ -97,6 +101,17 @@ glyphy trace --only moon --set trace.offsets=8 style.live=13   # one run, not sa
 glyphy config --glyph moon                    # the exact settings tracing will use
 glyphy set brief.template=my-brief.md         # your own brief, with {placeholders}
 ```
+
+Alternatives that are off by default, for drafts that need them:
+
+| Setting | Effect |
+|---|---|
+| `trace.smooth=0.08` | Blur (radius in units) before tracing: irons out noisy, wobbly drafts. |
+| `trace.stroke_shape="round"` | Exact-distance stroke correction instead of cross steps; rounds corners when growing a thin draft. |
+| `trace.snap_mode="edges"` | Straighten edges within `straighten` degrees of an axis, snap only those; never pulls curve corners into teeth. |
+| `style.roughness_max=0.24` | Fail glyphs whose outline wobbles more than this (the measured `roughness_reference` is a good value). |
+| `trace.svg_as_drawn=false` | Process SVG drafts like images (fit, correct, offsets) instead of taking them as drawn. |
+| `trace.centring_weight=0.15` | Trade crispness against centring when choosing the offset. |
 
 Template placeholders: `grid`, `image_size`, `unit_px`, `variants`,
 `reference_sheet`, `generated_dir`, `stroke`, `stroke_px`, `letter_stroke_min`,
@@ -134,8 +149,10 @@ for agents working on Glyphy itself.
 
 `examples/codicon-style/` is a complete project: 30 Codicons as references,
 11 new glyphs (heading, maths, comment, follow cursor, section, sun, moon, dark
-pages, main file, Typst file) drafted with GPT-6.1 Terra's image generation,
-traced, picked and exported. They ship in the Typewriter editor.
+pages, main file, Typst file) with two drafts each from GPT-6.1 Terra's image
+generation, traced, picked and exported with the default settings. The picked
+glyphs are the ones that ship in the Typewriter editor, and a test checks that
+the defaults still reproduce them pixel for pixel.
 
 ## Licence
 
