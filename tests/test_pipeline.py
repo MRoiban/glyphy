@@ -239,3 +239,31 @@ def test_offset_thickens_strokes_but_keeps_fills():
     frame, block = sorted(V._components(V._geometry(thick, 0.01)), key=lambda g: -g.area)
     assert abs(block.area - 16.0) < 0.05  # the fill keeps its size
     assert abs(frame.area - area(outline) - 0.1 * (56 + 48)) < 0.3  # the frame grew by 0.1 on every side
+
+
+def test_interrupted_trace_keeps_finished_drafts(tmp_path, monkeypatch):
+    import json
+    import glyphy.trace as T
+    project = make_project(tmp_path)
+    main(["add", "-p", str(project.root), "box", "a square outline"])
+    for i in (1, 2):
+        (project.path("generated") / f"box-{i}.svg").write_text(outline_icon())
+    real = T._trace_one
+
+    def fail_second(job):
+        if job[1].stem == "box-2":
+            raise KeyboardInterrupt
+        return real(job)
+
+    monkeypatch.setattr(T, "_trace_one", fail_second)
+    with pytest.raises(KeyboardInterrupt):
+        trace_all(load(project.root), jobs=1)
+    saved = json.loads((project.path("out") / "report.json").read_text())
+    assert list(saved) == ["box-1"] and (project.path("traced") / "box-1.svg").exists()
+
+
+def test_fit_line_on_long_runs():
+    from glyphy.vector import fit_line
+    t = np.linspace(0, 400, 20000)
+    c, d, err = fit_line(np.stack([t, 0.5 * t + 3], axis=1))
+    assert abs(abs(d @ np.array([2, 1]) / np.sqrt(5)) - 1) < 1e-9 and err < 1e-9

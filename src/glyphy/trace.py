@@ -370,7 +370,7 @@ def trace_all(project: Project, only: list[str] | None = None, overrides: dict |
               jobs: int | None = None) -> dict:
     """Trace every draft (or `only` these glyphs/stems), `jobs` drafts at a time (default: all CPU cores)."""
     import os
-    from concurrent.futures import ProcessPoolExecutor
+    from concurrent.futures import ProcessPoolExecutor, as_completed
 
     src, dst = project.path("generated"), project.path("traced")
     dst.mkdir(parents=True, exist_ok=True)
@@ -378,19 +378,46 @@ def trace_all(project: Project, only: list[str] | None = None, overrides: dict |
     out.mkdir(parents=True, exist_ok=True)
     report_file = out / "report.json"
     report = json.loads(report_file.read_text()) if report_file.exists() else {}
+    before = list(report)
     paths = [p for p in glyph_files(src) if not only or glyph_name(p.stem) in only or p.stem in only]
     work = [(project, p, overrides) for p in paths]
     jobs = max(1, min(jobs or os.cpu_count() or 1, len(work)))
+    rank = {p: i for i, p in enumerate(paths)}
+    saved_svg: dict[str, int] = {}
+    saved_report: dict[str, int] = {}
+
+    def write_report():
+        tmp = report_file.with_suffix(".json.tmp")
+        tmp.write_text(json.dumps(report, indent=1))
+        tmp.replace(report_file)
+
+    # Save each draft as it finishes, so an interrupted run keeps the work already done.
+    # Two drafts with one stem (x.png, x.svg): the later path wins, as in a sequential run.
+    def save(path, svg, result):
+        stem, r = path.stem, rank[path]
+        if svg and saved_svg.get(stem, -1) < r:
+            (dst / f"{stem}.svg").write_text(svg)
+            saved_svg[stem] = r
+        if saved_report.get(stem, -1) < r:
+            report[stem] = result
+            saved_report[stem] = r
+            write_report()
+
     if jobs == 1:
-        results = map(_trace_one, work)
+        for job in work:
+            save(*_trace_one(job))
     else:
-        pool = ProcessPoolExecutor(jobs)
-        results = pool.map(_trace_one, work)
-    for path, svg, result in results:
-        if svg:
-            (dst / f"{path.stem}.svg").write_text(svg)
-        report[path.stem] = result
-    if jobs > 1:
-        pool.shutdown()
-    report_file.write_text(json.dumps(report, indent=1))
+        failure = None
+        with ProcessPoolExecutor(jobs) as pool:
+            for future in as_completed([pool.submit(_trace_one, job) for job in work]):
+                try:
+                    save(*future.result())
+                except Exception as e:  # keep saving the other drafts, then report the first failure
+                    failure = failure or e
+        if failure:
+            raise failure
+    # Drafts finish in any order; keep the report in the same order a sequential run gives.
+    order = list(dict.fromkeys([*before, *(p.stem for p in paths)]))
+    report = {k: report[k] for k in order if k in report}
+    write_report()
     return report
