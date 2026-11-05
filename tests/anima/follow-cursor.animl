@@ -1,0 +1,11 @@
+<anima version="0.1" name="follow-cursor" title="Follow cursor" grid="16">
+  <meta>{"glyphy":{"concept":"a text I-beam cursor inside four corner brackets","kind":"icon","stroke":1}}</meta>
+
+  <color name="ink" value="currentColor"/>
+
+  <glyph name="follow-cursor"
+      d="M4.945 1.004L1 1.004L1 4.939L2.001 4.939L2.001 2.004L4.945 2.004L4.945 1.004ZM15 4.939L15 1.004L11.053 1.004L11.053 2.004L13.999 2.004L13.999 4.939L15 4.939ZM6.044 10.419L6.044 11.378L9.955 11.378L9.955 10.419L8.485 10.419L8.485 5.582L9.955 5.582L9.955 4.623L6.044 4.623L6.044 5.581L7.524 5.581L7.524 10.419L6.044 10.419ZM1 14.996L4.945 14.996L4.945 14L2.001 14L2.001 11.061L1 11.061L1 14.996ZM15 14.996L15 11.061L13.999 11.061L13.999 14L11.053 14L11.053 14.996L15 14.996Z"
+      source="glyphy" pick="follow-cursor-2" sha256="3517f6a9eff965f562fbedf1dee7c4f11bcbfa2c0f721df695e9019945450e06"/>
+
+  <path id="glyph" glyph="follow-cursor" fill="ink" fill-rule="evenodd"/>
+</anima>

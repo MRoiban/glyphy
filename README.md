@@ -42,6 +42,7 @@ glyphy sheet -p my-icons                               # → my-icons/out/sheet.
 glyphy inspect -p my-icons moon-1                      # → out/inspect/moon-1.png: full-resolution evidence
 glyphy pick  -p my-icons --best                        # or: glyphy pick moon=2 heading=1
 glyphy export -p my-icons -f ts -o src/glyphs.ts       # or -f json / -f sprite
+glyphy export -p my-icons -f animl -o anim/            # one Anima document per glyph (-f ani for JSON)
 glyphy status -p my-icons                              # where am I, what's next
 ```
 
@@ -166,6 +167,14 @@ rings = V.transform(st["clean"], 1 / st["unit"])   # into grid units
 rings = V.offset(rings, 0.1)                    # 0.1 units bolder, mitred
 print(V.to_svg(rings, project.grid))
 ```
+
+## Animating glyphs with Anima
+
+`glyphy export -f animl -o DIR` (or `-f ani`) writes one Anima
+document per picked glyph: a static icon whose rest frame is the glyph, carrying its concept,
+kind, the style's stroke, the picked variant and a SHA-256 of the path. The files are exactly what
+`anima new <name> --glyphy <project>` writes, so either tool can start the animation.
+From Python: `anima_document(project, name, d)` and `anima_markup(doc)`.
 
 ## Agents
 

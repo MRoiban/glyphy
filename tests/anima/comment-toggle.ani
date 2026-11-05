@@ -1,0 +1,35 @@
+{
+  "anima": "0.1",
+  "name": "comment-toggle",
+  "title": "Comment toggle",
+  "grid": 16,
+  "meta": {
+    "glyphy": {
+      "concept": "two forward slashes followed by a short horizontal line",
+      "kind": "letter",
+      "stroke": 1
+    }
+  },
+  "colors": {
+    "ink": "currentColor"
+  },
+  "glyphs": {
+    "comment-toggle": {
+      "source": "glyphy",
+      "pick": "comment-toggle-2",
+      "sha256": "9f62c670a587b99538d831a30d71b38e421480aebfc69238b88ee1701bc78328",
+      "d": "M5.54 4.575L2 11.425L3.354 11.425L6.862 4.575L5.54 4.575ZM5.485 11.425L6.821 11.425L10.329 4.576L8.993 4.576L5.485 11.425ZM14 8.587L14 7.438L9.616 7.438L9.616 8.587L14 8.587Z"
+    }
+  },
+  "nodes": [
+    {
+      "id": "glyph",
+      "type": "path",
+      "glyph": "comment-toggle",
+      "fill": {
+        "color": "ink",
+        "rule": "evenodd"
+      }
+    }
+  ]
+}
