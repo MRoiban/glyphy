@@ -1,0 +1,11 @@
+<anima version="0.1" name="typst-file" title="Typst file" grid="16">
+  <meta>{"glyphy":{"concept":"a page outline with a folded corner and a lowercase \"t\" inside","kind":"icon","stroke":1}}</meta>
+
+  <color name="ink" value="currentColor"/>
+
+  <glyph name="typst-file"
+      d="M9.862 1L2.127 1L2.127 15L13.873 15L13.873 5.011L9.862 1ZM8.877 1.976L8.877 5.857L12.896 5.857L12.896 14.017L3.099 14.017L3.099 1.976L8.877 1.976ZM9.847 2.411L12.308 4.871L9.847 4.871L9.847 2.411ZM5.515 7.853L5.515 8.886L6.762 8.886L6.762 11.542C6.762 11.62 6.799 11.69 6.822 11.762C6.969 12.214 7.332 12.581 7.799 12.694C7.836 12.703 7.884 12.739 7.921 12.739L9.891 12.739C9.954 12.739 10.003 12.717 10.061 12.698L10.061 11.686L8.184 11.686C8.064 11.686 7.892 11.488 7.839 11.388C7.834 11.379 7.818 11.355 7.818 11.347L7.818 8.902C7.818 8.896 7.818 8.891 7.818 8.886L9.511 8.886L9.511 7.836L7.804 7.836L7.804 6.316L6.761 6.316L6.761 7.853L5.515 7.853Z"
+      source="glyphy" pick="typst-file-2" sha256="a72f50f4f0b6e6beb655dbc7734bbaa14938f3710ba969e6029210b7a6d5aa28"/>
+
+  <path id="glyph" glyph="typst-file" fill="ink" fill-rule="evenodd"/>
+</anima>

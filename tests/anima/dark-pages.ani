@@ -1,0 +1,35 @@
+{
+  "anima": "0.1",
+  "name": "dark-pages",
+  "title": "Dark pages",
+  "grid": 16,
+  "meta": {
+    "glyphy": {
+      "concept": "a page outline with a folded corner whose lower-right half is solid",
+      "kind": "icon",
+      "stroke": 1
+    }
+  },
+  "colors": {
+    "ink": "currentColor"
+  },
+  "glyphs": {
+    "dark-pages": {
+      "source": "glyphy",
+      "pick": "dark-pages-1",
+      "sha256": "dacc298b04139dc962ed338a47892ca13e167e7013e2a5e41060a51e29aa323f",
+      "d": "M13.614 4.894L9.72 1L2.378 1L1.886 1.492L1.886 14.625L2.261 15L13.246 15L13.614 14.631L13.614 4.894ZM2.895 2L8.463 2L8.463 6L12.355 6L3.184 14.05L2.895 14.05L2.895 2ZM9.432 2.105L12.355 5.028L9.432 5.028L9.432 2.105Z"
+    }
+  },
+  "nodes": [
+    {
+      "id": "glyph",
+      "type": "path",
+      "glyph": "dark-pages",
+      "fill": {
+        "color": "ink",
+        "rule": "evenodd"
+      }
+    }
+  ]
+}

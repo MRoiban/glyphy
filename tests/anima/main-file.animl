@@ -1,0 +1,11 @@
+<anima version="0.1" name="main-file" title="Main file" grid="16">
+  <meta>{"glyphy":{"concept":"a page outline with a folded corner and a small solid star inside","kind":"icon","stroke":1}}</meta>
+
+  <color name="ink" value="currentColor"/>
+
+  <glyph name="main-file"
+      d="M10.348 1L2.04 1L2.04 15L13.96 15L13.96 4.562L10.348 1ZM3.045 2.003L9.316 2.003L9.316 5.567L12.956 5.567L12.956 13.992L3.045 13.992L3.045 2.003ZM12.478 4.562L10.322 4.562L10.322 2.406L12.478 4.562ZM10.739 8.455L8.708 8.455L7.998 6.624L7.297 8.473L5.261 8.473L6.894 9.783L6.268 11.686L7.999 10.509L9.728 11.691L9.108 9.796L10.739 8.455Z"
+      source="glyphy" pick="main-file-2" sha256="9b5790c1afd94c18d460d479a3d0c7f96cdf3cce3696f87451864cff6f527de1"/>
+
+  <path id="glyph" glyph="main-file" fill="ink" fill-rule="evenodd"/>
+</anima>

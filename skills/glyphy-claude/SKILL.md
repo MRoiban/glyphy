@@ -126,6 +126,7 @@ Re-run `glyphy trace -p icons --only <name>` after each change.
 glyphy pick -p icons --best            # passing + crispest per glyph
 glyphy pick -p icons heading=2         # or choose by eye
 glyphy export -p icons -f ts -o <app>/src/glyphs.ts    # -f json, -f sprite
+glyphy export -p icons -f animl -o <app>/anim/          # animate with Anima: one .animl per glyph
 ```
 
 Final SVGs are in `icons/glyphs/`. Tell the user which variant you chose for

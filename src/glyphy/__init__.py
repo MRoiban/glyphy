@@ -16,12 +16,12 @@ __version__ = "0.2.0"
 
 from .brief import write_brief
 from .config import Project, apply_setting, load
-from .export import export, pick
+from .export import anima_document, anima_markup, export, pick
 from .metrics import Metrics, crispness, measure, measure_svg
 from .style import measure_references
 from .trace import check_svg, normalise, to_svg, trace_all, trace_file
 
 __all__ = [
     "Project", "load", "apply_setting", "measure_references", "write_brief", "trace_all", "trace_file",
-    "check_svg", "normalise", "to_svg", "pick", "export", "Metrics", "measure", "measure_svg", "crispness",
+    "check_svg", "normalise", "to_svg", "pick", "export", "anima_document", "anima_markup", "Metrics", "measure", "measure_svg", "crispness",
 ]

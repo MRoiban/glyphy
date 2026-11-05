@@ -1,6 +1,7 @@
 """Picking final glyphs and exporting them for an app."""
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 import shutil
@@ -47,8 +48,87 @@ def _paths(project: Project) -> dict[str, str]:
     return out
 
 
+def _number(v):
+    # Anima writes JSON numbers the JavaScript way: 1.0 is 1.
+    return int(v) if isinstance(v, float) and v.is_integer() else v
+
+
+def anima_document(project: Project, name: str, d: str) -> dict:
+    """A static Anima (.ani) document whose rest frame is the glyph, with Glyphy's metadata.
+
+    Mirrors `anima new <name> --glyphy <project>` key for key, so a Glyphy export and an Anima
+    scaffold of the same glyph are the same file.
+    """
+    info = project.glyphs.get(name, {})
+    glyphy = {k: info[k] for k in ("concept", "kind") if info.get(k)}
+    if project.style.get("stroke"):
+        glyphy["stroke"] = _number(project.style["stroke"])
+    glyph = {"source": "glyphy"}
+    if project.picks.get(name):
+        glyph["pick"] = project.picks[name]
+    glyph["sha256"] = hashlib.sha256(d.encode()).hexdigest()
+    glyph["d"] = d
+    return {
+        "anima": "0.1",
+        "name": name,
+        "title": (name.replace("-", " ")[:1].upper() + name.replace("-", " ")[1:]),
+        "grid": project.grid,
+        "meta": {"glyphy": glyphy},
+        "colors": {"ink": "currentColor"},
+        "glyphs": {name: glyph},
+        "nodes": [{"id": "glyph", "type": "path", "glyph": name, "fill": {"color": "ink", "rule": "evenodd"}}],
+    }
+
+
+def _attr(s: str) -> str:
+    return s.replace("&", "&amp;").replace("<", "&lt;").replace('"', "&quot;")
+
+
+def anima_markup(doc: dict) -> str:
+    """The same document as AniML (.animl), in the layout `anima fmt` produces."""
+    name = doc["name"]
+    glyph = doc["glyphs"][name]
+    meta = json.dumps(doc["meta"], separators=(",", ":"), ensure_ascii=False)
+
+    def element(tag: str, attrs: list[tuple[str, str]], indent: str = "  ") -> str:
+        # `anima fmt` puts a value longer than 80 characters on its own continuation line, and
+        # the attribute after it on the next one.
+        out, continuation = f"{indent}<{tag}", False
+        for key, value in attrs:
+            long = len(value) > 80
+            out += (f"\n{indent}    " if long or continuation else " ") + f'{key}="{_attr(value)}"'
+            continuation = long
+        return out + "/>"
+
+    glyph_attrs = [("name", name), ("d", glyph["d"]), ("source", glyph["source"])]
+    glyph_attrs += [(k, glyph[k]) for k in ("pick", "sha256") if k in glyph]
+    head = element("anima", [("version", doc["anima"]), ("name", name), ("title", doc["title"]),
+                             ("grid", str(doc["grid"]))], "")[:-2] + ">"
+    meta_text = meta.replace("&", "&amp;").replace("<", "&lt;")
+    return "\n".join([
+        head,
+        f"  <meta>{meta_text}</meta>",
+        "",
+        element("color", [("name", "ink"), ("value", "currentColor")]),
+        "",
+        element("glyph", glyph_attrs),
+        "",
+        element("path", [("id", "glyph"), ("glyph", name), ("fill", "ink"), ("fill-rule", "evenodd")]),
+        "</anima>",
+        "",
+    ])
+
+
 def export(project: Project, fmt: str, target: Path) -> Path:
     paths, grid = _paths(project), project.grid
+    if fmt in ("ani", "animl"):
+        # One Anima document per glyph: the target is a directory.
+        target.mkdir(parents=True, exist_ok=True)
+        for name, d in paths.items():
+            doc = anima_document(project, name, d)
+            text = json.dumps(doc, indent=2, ensure_ascii=False) + "\n" if fmt == "ani" else anima_markup(doc)
+            (target / f"{name}.{fmt}").write_text(text)
+        return target
     target.parent.mkdir(parents=True, exist_ok=True)
     if fmt == "json":
         target.write_text(json.dumps({"grid": grid, "glyphs": paths}, indent=1))
@@ -63,5 +143,5 @@ def export(project: Project, fmt: str, target: Path) -> Path:
                           for name, d in paths.items())
         target.write_text(f'<svg xmlns="http://www.w3.org/2000/svg" style="display:none">{symbols}</svg>\n')
     else:
-        raise SystemExit(f"Unknown format {fmt!r}; use ts, json or sprite.")
+        raise SystemExit(f"Unknown format {fmt!r}; use ts, json, sprite, ani or animl.")
     return target

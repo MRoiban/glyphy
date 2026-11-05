@@ -1,0 +1,35 @@
+{
+  "anima": "0.1",
+  "name": "math-display",
+  "title": "Math display",
+  "grid": 16,
+  "meta": {
+    "glyphy": {
+      "concept": "a capital sigma between a line above and a line below",
+      "kind": "letter",
+      "stroke": 1
+    }
+  },
+  "colors": {
+    "ink": "currentColor"
+  },
+  "glyphs": {
+    "math-display": {
+      "source": "glyphy",
+      "pick": "math-display-2",
+      "sha256": "229ad4f0c2558185e681c3ff68399aef58c3c76f5e5bcf99b44ac47d6cd5dd68",
+      "d": "M13.295 2L2.705 2L2.705 3.18L13.295 3.18L13.295 2ZM8.698 7.975L6.003 5.186L10.708 5.186L10.708 6.064L11.859 6.064L11.859 4.042L4.152 4.042L4.152 4.994L7.05 7.994L4.152 11.034L4.152 11.964L11.859 11.964L11.859 9.941L10.708 9.941L10.708 10.819L5.987 10.819L8.698 7.975ZM2.705 12.821L2.705 14L13.295 14L13.295 12.821L2.705 12.821Z"
+    }
+  },
+  "nodes": [
+    {
+      "id": "glyph",
+      "type": "path",
+      "glyph": "math-display",
+      "fill": {
+        "color": "ink",
+        "rule": "evenodd"
+      }
+    }
+  ]
+}
