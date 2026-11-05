@@ -82,7 +82,8 @@ def find_corners(pts: np.ndarray, w: int, min_turn: float) -> list[int]:
 
 def fit_line(p: np.ndarray):
     c = p.mean(0)
-    d = np.linalg.svd(p - c)[2][0]
+    # Thin SVD: the full one also builds an unused n×n U, which made long runs quadratic.
+    d = np.linalg.svd(p - c, full_matrices=False)[2][0]
     return c, d, float(np.abs((p - c) @ np.array([-d[1], d[0]])).max())
 
 
