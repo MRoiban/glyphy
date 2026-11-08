@@ -70,6 +70,7 @@ If the user gives no references, ask for them. Do not invent a style.
    ```
    glyphy pick -p icons --best          # or: glyphy pick -p icons moon=2 heading=1
    glyphy export -p icons -f ts -o <app>/src/glyphs.ts    # or -f json / -f sprite
+   glyphy export -p icons -f animl -o <app>/anim/          # animate with Anima: one .animl per glyph
    ```
    Final SVGs are in `icons/glyphs/`. Report each glyph's numbers, the sheet and
    the inspect images.

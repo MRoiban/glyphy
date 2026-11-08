@@ -241,8 +241,9 @@ def main(argv=None) -> None:
     p = command("pick", cmd_pick, "Choose final variants: name=2 … or --best.")
     p.add_argument("choices", nargs="*", help="name=variant pairs, e.g. heading=2")
     p.add_argument("--best", action="store_true", help="pick the passing, most crisp variant of each glyph")
-    p = command("export", cmd_export, "Export picked glyphs as a TS module, JSON or SVG sprite.")
-    p.add_argument("--format", "-f", choices=["ts", "json", "sprite"], default="ts")
+    p = command("export", cmd_export, "Export picked glyphs as a TS module, JSON, SVG sprite, or Anima documents.")
+    p.add_argument("--format", "-f", choices=["ts", "json", "sprite", "ani", "animl"], default="ts",
+                   help="ani/animl write one Anima document per glyph into the -o directory")
     p.add_argument("--output", "-o", required=True)
     command("status", cmd_status, "Show progress and the next step.")
     p = command("set", cmd_set, "Change any setting: style.stroke=1.5, trace.alphamax=1.1, glyphs.heading.kind=letter.")

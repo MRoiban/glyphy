@@ -267,3 +267,14 @@ def test_fit_line_on_long_runs():
     t = np.linspace(0, 400, 20000)
     c, d, err = fit_line(np.stack([t, 0.5 * t + 3], axis=1))
     assert abs(abs(d @ np.array([2, 1]) / np.sqrt(5)) - 1) < 1e-9 and err < 1e-9
+
+
+@pytest.mark.parametrize("fmt", ["animl", "ani"])
+def test_anima_export_matches_the_anima_cli(tmp_path, fmt):
+    # Golden files come from the Anima CLI itself (tests/anima/README.md).
+    golden = Path(__file__).parent / "anima"
+    out = export(load(Path(__file__).parents[1] / "examples" / "codicon-style"), fmt, tmp_path / fmt)
+    written = sorted(p.name for p in out.iterdir())
+    assert written == sorted(p.name for p in golden.glob(f"*.{fmt}"))
+    for name in written:
+        assert (out / name).read_text() == (golden / name).read_text(), name

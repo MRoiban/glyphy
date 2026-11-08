@@ -1,0 +1,11 @@
+<anima version="0.1" name="heading" title="Heading" grid="16">
+  <meta>{"glyphy":{"concept":"a geometric sans-serif capital \"H\"","kind":"letter","stroke":1}}</meta>
+
+  <color name="ink" value="currentColor"/>
+
+  <glyph name="heading"
+      d="M3.182 8.321L12.821 8.321L12.821 13.248L14 13.248L14 2.252L12.821 2.252L12.821 7.159L3.182 7.159L3.182 2.252L2 2.252L2 13.248L3.182 13.248L3.182 8.321Z"
+      source="glyphy" pick="heading-2" sha256="880dd7b65bb16aacc0ff28385bb0d7df87ab8bf4f9f654f8507b89f03be66688"/>
+
+  <path id="glyph" glyph="heading" fill="ink" fill-rule="evenodd"/>
+</anima>
